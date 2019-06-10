@@ -14,7 +14,8 @@
   "require": {
     "php": ">=7.2",
     "ext-dom": "*",
-    "ext-libxml": "*"
+    "ext-libxml": "*",
+    "sabre/uri": "^2.1"
   },
   "autoload": {
     "psr-4": {
