@@ -13,6 +13,13 @@ use DOMXPath;
 
 use function Sabre\Uri\resolve;
 
+/**
+ * Reads Microdata embedded into a HTML document.
+ *
+ * @todo multiple (space separated) values in itemprop
+ * @todo do not prepend vocabulary identifier to URLs in itemprop
+ * @todo support for the itemref attribute
+ */
 class MicrodataReader implements SchemaReader
 {
     /**
@@ -149,6 +156,12 @@ class MicrodataReader implements SchemaReader
      */
     private function getPropertyValue(DOMNode $node, DOMXPath $xpath, string $url)
     {
+        /**
+         * Properties can themselves be groups of name-value pairs, by putting the itemscope attribute on the element
+         * that declares the property.
+         *
+         * https://www.w3.org/TR/microdata/#ex-nested
+         */
         $attr = $node->attributes->getNamedItem('itemscope');
 
         if ($attr !== null) {
@@ -198,7 +211,36 @@ class MicrodataReader implements SchemaReader
         }
 
         /**
+         * For numeric data, the meter element and its value attribute can be used instead, as long as there is no
+         * content attribute.
+         *
+         * https://www.w3.org/TR/microdata/#ex-meter
+         */
+        if ($node->nodeName === 'meter') {
+            $attr = $node->attributes->getNamedItem('value');
+
+            if ($attr !== null) {
+                return $attr->nodeValue;
+            }
+        }
+
+        /**
+         * Similarly, for date- and time-related data, the time element and its datetime attribute can be used to
+         * specify a specifically formatted date or time, as long as there is no content attribute.
+         *
+         * https://www.w3.org/TR/microdata/#ex-date
+         */
+        if ($node->nodeName === 'time') {
+            $attr = $node->attributes->getNamedItem('datetime');
+
+            if ($attr !== null) {
+                return $attr->nodeValue;
+            }
+        }
+
+        /**
          * Otherwise, the text content of that element is the value of that property.
+         *
          * Note that we remove artificial whitespace from HTML formatting.
          */
         return trim(preg_replace('/\s+/', ' ', $node->textContent));
