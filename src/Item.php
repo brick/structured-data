@@ -12,6 +12,13 @@ use TypeError;
 class Item
 {
     /**
+     * The global identifier of the item, if any.
+     *
+     * @var string|null
+     */
+    private $id;
+
+    /**
      * The types this Item implements, as URLs.
      *
      * @var array<string>
@@ -28,11 +35,23 @@ class Item
     /**
      * Item constructor.
      *
-     * @param string ...$types The types this Item implements, as URLs, e.g. http://schema.org/Product .
+     * @param string|null $id       An optional global identifier for the item.
+     * @param string      ...$types The types this Item implements, as URLs, e.g. http://schema.org/Product .
      */
-    public function __construct(string ...$types)
+    public function __construct(?string $id, string ...$types)
     {
+        $this->id    = $id;
         $this->types = $types;
+    }
+
+    /**
+     * Returns the global identifier of the item, if any.
+     *
+     * @return string|null
+     */
+    public function getId() : ?string
+    {
+        return $this->id;
     }
 
     /**

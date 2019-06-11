@@ -99,6 +99,14 @@ class MicrodataReader implements SchemaReader
      */
     private function nodeToItem(DOMNode $node, DOMXPath $xpath, string $url) : Item
     {
+        $itemid = $node->attributes->getNamedItem('itemid');
+
+        if ($itemid !== null) {
+            $id = $itemid->nodeValue;
+        } else {
+            $id = null;
+        }
+
         $itemtype = $node->attributes->getNamedItem('itemtype');
 
         if ($itemtype !== null) {
@@ -113,7 +121,7 @@ class MicrodataReader implements SchemaReader
             $types = [];
         }
 
-        $item = new Item(...$types);
+        $item = new Item($id, ...$types);
 
         // Find all nested properties
         $itemprops = $xpath->query('.//*[@itemprop]', $node);
