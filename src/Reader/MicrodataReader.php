@@ -28,7 +28,11 @@ class MicrodataReader implements SchemaReader
     {
         $xpath = new DOMXPath($document);
 
-        // Find root items only: exclude items that are used as a property of another item.
+        /**
+         * An item is a top-level Microdata item if its element does not have an itemprop attribute.
+         *
+         * https://www.w3.org/TR/microdata/#associating-names-with-items
+         */
         $nodes = $xpath->query('//*[@itemscope and not(@itemprop)]');
 
         return array_map(function(DOMNode $node) use ($xpath, $url) {
