@@ -11,6 +11,7 @@ use DOMDocument;
 use DOMNode;
 use DOMXPath;
 
+use Sabre\Uri\InvalidUriException;
 use function Sabre\Uri\resolve;
 
 /**
@@ -20,58 +21,6 @@ use function Sabre\Uri\resolve;
  */
 class MicrodataReader implements SchemaReader
 {
-    /**
-     * The HTML5 elements having a src attribute.
-     *
-     * https://www.w3schools.com/tags/att_src.asp
-     */
-    private const SRC_ELEMENTS = [
-        'audio',
-        'embed',
-        'iframe',
-        'img',
-        'input',
-        'script',
-        'source',
-        'track',
-        'video'
-    ];
-
-    /**
-     * The HTML5 elements having a href attribute.
-     *
-     * https://www.w3schools.com/tags/att_href.asp
-     */
-    private const HREF_ELEMENTS = [
-        'a',
-        'area',
-        'base',
-        'link'
-    ];
-
-    /**
-     * A map of element name to 'src' or 'href'.
-     *
-     * This array is built from constants in the constructor.
-     *
-     * @var array
-     */
-    private $srcHrefElements = [];
-
-    /**
-     * MicrodataReader constructor.
-     */
-    public function __construct()
-    {
-        foreach (self::SRC_ELEMENTS as $name) {
-            $this->srcHrefElements[$name] = 'src';
-        }
-
-        foreach (self::HREF_ELEMENTS as $name) {
-            $this->srcHrefElements[$name] = 'href';
-        }
-    }
-
     /**
      * @inheritDoc
      */
@@ -108,7 +57,7 @@ class MicrodataReader implements SchemaReader
              *
              * https://www.w3.org/TR/microdata/#items
              */
-            $id = resolve($url, $itemid->nodeValue);
+            $id = resolve($url, $itemid->textContent);
         } else {
             $id = null;
         }
@@ -122,7 +71,7 @@ class MicrodataReader implements SchemaReader
              *
              * https://www.w3.org/TR/microdata/#items
              */
-            $types = explode(' ', $itemtype->nodeValue);
+            $types = explode(' ', $itemtype->textContent);
 
             /**
              * If the itemtype attribute is missing or parsing it in this way finds no tokens, the item is said to have
@@ -169,7 +118,7 @@ class MicrodataReader implements SchemaReader
              *
              * https://www.w3.org/TR/microdata/#ex-multival
              */
-            $names = $itemprop->attributes->getNamedItem('itemprop')->nodeValue;
+            $names = $itemprop->attributes->getNamedItem('itemprop')->textContent;
             $names = explode(' ', $names);
 
             foreach ($names as $name) {
@@ -196,6 +145,8 @@ class MicrodataReader implements SchemaReader
     }
 
     /**
+     * https://www.w3.org/TR/microdata/#values
+     *
      * @param DOMNode  $node  A DOMNode representing an element with the itemprop attribute.
      * @param DOMXPath $xpath A DOMXPath object created from the node's document element.
      * @param string   $url   The URL the document was retrieved from, for relative URL resolution.
@@ -205,10 +156,7 @@ class MicrodataReader implements SchemaReader
     private function getPropertyValue(DOMNode $node, DOMXPath $xpath, string $url)
     {
         /**
-         * Properties can themselves be groups of name-value pairs, by putting the itemscope attribute on the element
-         * that declares the property.
-         *
-         * https://www.w3.org/TR/microdata/#ex-nested
+         * If the element also has an itemscope attribute: the value is the item created by the element.
          */
         $attr = $node->attributes->getNamedItem('itemscope');
 
@@ -217,79 +165,98 @@ class MicrodataReader implements SchemaReader
         }
 
         /**
-         * If the text that would normally be the value of a property, such as the element content, is unsuitable for
-         * recording the property value, it can be expressed using the content attribute of the element.
-         *
-         * https://www.w3.org/TR/microdata/#ex-content
+         * If the element has a content attribute: the value is the textContent of the element's content attribute.
          */
         $attr = $node->attributes->getNamedItem('content');
 
         if ($attr !== null) {
-            return $attr->nodeValue;
+            return $attr->textContent;
         }
 
         /**
-         * When a string value is in some machine-readable format unsuitable to present as the content of an
-         * element, it can be expressed using the value attribute of the data element, as long as there is no
-         * content attribute.
-         *
-         * https://www.w3.org/TR/microdata/#ex-dataelem
+         * If the element is an audio, embed, iframe, img, source, track, or video element: if the element has a src
+         * attribute, let proposed value be the result of resolving that attribute's textContent. If proposed value is a
+         * valid absolute URL: The value is proposed value. Otherwise the value is the empty string.
          */
-        if ($node->nodeName === 'data') {
+        $elements = ['audio', 'embed', 'iframe', 'img', 'source', 'track', 'video'];
+
+        if (in_array($node->nodeName, $elements, true)) {
+            $attr = $node->attributes->getNamedItem('src');
+
+            if ($attr !== null) {
+                try {
+                    return resolve($url, $attr->textContent);
+                } catch (InvalidUriException $e) {
+                    return '';
+                }
+            }
+        }
+
+        /**
+         * If the element is an a, area, or link element: if the element has an href attribute, let proposed value be
+         * the result of resolving that attribute's textContent. If proposed value is a valid absolute URL: The value is
+         * proposed value. Otherwise the value is the empty string.
+         */
+        $elements = ['a', 'area', 'link'];
+
+        if (in_array($node->nodeName, $elements, true)) {
+            $attr = $node->attributes->getNamedItem('href');
+
+            if ($attr !== null) {
+                try {
+                    return resolve($url, $attr->textContent);
+                } catch (InvalidUriException $e) {
+                    return '';
+                }
+            }
+        }
+
+        /**
+         * If the element is an object element: if the element has a data attribute, let proposed value be the result of
+         * resolving that attribute's textContent. If proposed value is a valid absolute URL: The value is proposed
+         * value. Otherwise the value is the empty string.
+         */
+        if ($node->nodeName === 'object') {
+            $attr = $node->attributes->getNamedItem('data');
+
+            if ($attr !== null) {
+                try {
+                    return resolve($url, $attr->textContent);
+                } catch (InvalidUriException $e) {
+                    return '';
+                }
+            }
+        }
+
+        /**
+         * If the element is a data or meter element: if the element has a value attribute, the value is that
+         * attribute's textContent.
+         */
+        if ($node->nodeName === 'data' || $node->nodeName === 'meter') {
             $attr = $node->attributes->getNamedItem('value');
 
             if ($attr !== null) {
-                return $attr->nodeValue;
+                return $attr->textContent;
             }
         }
 
         /**
-         * When an itemprop is used on an element that can have a src or href attribute, such as links and media
-         * elements, that does not have a content attribute, the value of the name-value pair is an absolute URL
-         * based on the src or href attribute (or the empty string if they are missing or there is an error).
-         *
-         * https://www.w3.org/TR/microdata/#ex-url
-         */
-        if (isset($this->srcHrefElements[$node->nodeName])) {
-            $attr = $node->attributes->getNamedItem($this->srcHrefElements[$node->nodeName]);
-
-            if ($attr !== null) {
-                return resolve($url, $attr->nodeValue);
-            }
-        }
-
-        /**
-         * For numeric data, the meter element and its value attribute can be used instead, as long as there is no
-         * content attribute.
-         *
-         * https://www.w3.org/TR/microdata/#ex-meter
-         */
-        if ($node->nodeName === 'meter') {
-            $attr = $node->attributes->getNamedItem('value');
-
-            if ($attr !== null) {
-                return $attr->nodeValue;
-            }
-        }
-
-        /**
-         * Similarly, for date- and time-related data, the time element and its datetime attribute can be used to
-         * specify a specifically formatted date or time, as long as there is no content attribute.
-         *
-         * https://www.w3.org/TR/microdata/#ex-date
+         * If the element is a time element: if the element has a datetime attribute, the value is that attribute's
+         * textContent.
          */
         if ($node->nodeName === 'time') {
             $attr = $node->attributes->getNamedItem('datetime');
 
             if ($attr !== null) {
-                return $attr->nodeValue;
+                return $attr->textContent;
             }
         }
 
         /**
-         * Otherwise, the text content of that element is the value of that property.
+         * Otherwise: the value is the element's textContent.
          *
-         * Note that we remove artificial whitespace from HTML formatting.
+         * Note that even though this is not suggested by the spec, we remove extra whitespace that's likely to be
+         * an artifact of HTML formatting.
          */
         return trim(preg_replace('/\s+/', ' ', $node->textContent));
     }
