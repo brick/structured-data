@@ -102,7 +102,14 @@ class MicrodataReader implements SchemaReader
         $itemid = $node->attributes->getNamedItem('itemid');
 
         if ($itemid !== null) {
-            $id = $itemid->nodeValue;
+            /**
+             * The global identifier of an item is the value of its element's itemid attribute, if it has one, resolved
+             * relative to the element on which the attribute is specified. If the itemid attribute is missing or if
+             * resolving it fails, it is said to have no global identifier.
+             *
+             * https://www.w3.org/TR/microdata/#items
+             */
+            $id = resolve($url, $itemid->nodeValue);
         } else {
             $id = null;
         }
@@ -114,7 +121,7 @@ class MicrodataReader implements SchemaReader
              * The item types of an item are the tokens obtained by splitting the element's itemtype attribute's value
              * on spaces.
              *
-             * https://www.w3.org/TR/microdata/#x5-2-items-itemscope-itemtype-and-itemid
+             * https://www.w3.org/TR/microdata/#items
              */
             $types = explode(' ', $itemtype->nodeValue);
 
@@ -280,7 +287,7 @@ class MicrodataReader implements SchemaReader
     /**
      * Returns the vocabulary identifier for a given type.
      *
-     * https://www.w3.org/TR/2018/WD-microdata-20180426/#dfn-vocabulary-identifier
+     * https://www.w3.org/TR/microdata/#dfn-vocabulary-identifier
      *
      * @param string[] $types The types, as valid absolute URLs.
      *
