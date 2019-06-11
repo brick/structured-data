@@ -16,7 +16,6 @@ use function Sabre\Uri\resolve;
 /**
  * Reads Microdata embedded into a HTML document.
  *
- * @todo multiple (space separated) values in itemprop
  * @todo do not prepend vocabulary identifier to URLs in itemprop
  * @todo support for the itemref attribute
  */
@@ -136,12 +135,22 @@ class MicrodataReader implements SchemaReader
 
         /** @var DOMNode[] $itemprops */
         foreach ($itemprops as $itemprop) {
-            $name = $itemprop->attributes->getNamedItem('itemprop')->nodeValue;
-            $name = $vocabularyIdentifier . $name;
+            /**
+             * An element introducing a property can introduce multiple properties at once, to avoid duplication when
+             * some of the properties have the same value.
+             *
+             * https://www.w3.org/TR/microdata/#ex-multival
+             */
+            $names = $itemprop->attributes->getNamedItem('itemprop')->nodeValue;
+            $names = explode(' ', $names);
 
-            $value = $this->getPropertyValue($itemprop, $xpath, $url);
+            foreach ($names as $name) {
+                $name = $vocabularyIdentifier . $name;
 
-            $item->addProperty($name, $value);
+                $value = $this->getPropertyValue($itemprop, $xpath, $url);
+
+                $item->addProperty($name, $value);
+            }
         }
 
         return $item;
