@@ -111,12 +111,20 @@ class MicrodataReader implements SchemaReader
 
         if ($itemtype !== null) {
             /**
-             * Multiple types from the same vocabulary can be given for a single item by listing the URLs, separated by
-             * spaces, in the attribute's value.
+             * The item types of an item are the tokens obtained by splitting the element's itemtype attribute's value
+             * on spaces.
              *
-             * https://www.w3.org/TR/microdata/#x4-3-typed-items
+             * https://www.w3.org/TR/microdata/#x5-2-items-itemscope-itemtype-and-itemid
              */
             $types = explode(' ', $itemtype->nodeValue);
+
+            /**
+             * If the itemtype attribute is missing or parsing it in this way finds no tokens, the item is said to have
+             * no item types.
+             */
+            $types = array_values(array_filter($types, function(string $type) {
+                return $type !== '';
+            }));
         } else {
             $types = [];
         }
