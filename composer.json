@@ -14,6 +14,7 @@
   "require": {
     "php": ">=7.2",
     "ext-dom": "*",
+    "ext-json": "*",
     "ext-libxml": "*",
     "sabre/uri": "^2.1"
   },
