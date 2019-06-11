@@ -16,7 +16,6 @@ use function Sabre\Uri\resolve;
 /**
  * Reads Microdata embedded into a HTML document.
  *
- * @todo do not prepend vocabulary identifier to URLs in itemprop
  * @todo support for the itemref attribute
  */
 class MicrodataReader implements SchemaReader
@@ -174,7 +173,18 @@ class MicrodataReader implements SchemaReader
             $names = explode(' ', $names);
 
             foreach ($names as $name) {
-                $name = $vocabularyIdentifier . $name;
+                /**
+                 * Each token must be either a valid absolute URL or a a string that contains no "." (U+002E) characters
+                 * and no ":" (U+003A) characters.
+                 *
+                 * https://www.w3.org/TR/microdata/#items
+                 *
+                 * We therefore consider anything containing these characters as an absolute URL, and only prepend the
+                 * vocabulary identifier if none of these characters are found.
+                 */
+                if (strpos($name, '.') === false && strpos($name, ':') === false) {
+                    $name = $vocabularyIdentifier . $name;
+                }
 
                 $value = $this->getPropertyValue($itemprop, $xpath, $url);
 
