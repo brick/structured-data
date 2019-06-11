@@ -102,7 +102,13 @@ class MicrodataReader implements SchemaReader
         $itemtype = $node->attributes->getNamedItem('itemtype');
 
         if ($itemtype !== null) {
-            $types = explode(' ', $itemtype->textContent);
+            /**
+             * Multiple types from the same vocabulary can be given for a single item by listing the URLs, separated by
+             * spaces, in the attribute's value.
+             *
+             * https://www.w3.org/TR/microdata/#x4-3-typed-items
+             */
+            $types = explode(' ', $itemtype->nodeValue);
         } else {
             $types = [];
         }
