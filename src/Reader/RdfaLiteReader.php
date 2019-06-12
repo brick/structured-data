@@ -273,11 +273,7 @@ class RdfaLiteReader implements SchemaReader
         $vocab = $node->attributes->getNamedItem('vocab');
 
         if ($vocab !== null) {
-            $vocabularyCandidate = $this->checkVocabularyUrl($vocab->textContent);
-
-            if ($vocabularyCandidate !== null) {
-                $vocabulary = $vocabularyCandidate;
-            }
+            return $this->checkVocabularyUrl($vocab->textContent);
         }
 
         return $vocabulary;
