@@ -1,6 +1,6 @@
 {
   "name": "brick/schema",
-  "description": "Microdata, RDFa Lite & JSON-LD structured data parser",
+  "description": "Microdata, RDFa Lite & JSON-LD structured data reader",
   "type": "library",
   "keywords": [
     "Brick",
