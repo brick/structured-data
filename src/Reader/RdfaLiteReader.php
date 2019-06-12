@@ -116,15 +116,7 @@ class RdfaLiteReader implements SchemaReader
      */
     private function nodeToItem(DOMNode $node, DOMXPath $xpath, string $url, array $prefixes, ?string $vocabulary) : Item
     {
-        $vocab = $node->attributes->getNamedItem('vocab');
-
-        if ($vocab !== null) {
-            $vocabularyCandidate = $this->checkVocabularyUrl($vocab->textContent);
-
-            if ($vocabularyCandidate !== null) {
-                $vocabulary = $vocabularyCandidate;
-            }
-        }
+        $vocabulary = $this->updateVocabulary($node, $vocabulary);
 
         /**
          * The resource attribute holds the item identifier, than must be resolved relative to the current URL.
@@ -195,7 +187,7 @@ class RdfaLiteReader implements SchemaReader
             $names = explode(' ', $names);
 
             foreach ($names as $name) {
-                $name = $this->resolveTerm($name, $prefixes, $vocabulary);
+                $name = $this->resolveTerm($name, $prefixes, $this->updateVocabulary($property, $vocabulary));
 
                 if ($name === null) {
                     continue;
@@ -266,6 +258,29 @@ class RdfaLiteReader implements SchemaReader
         }
 
         return true;
+    }
+
+    /**
+     * Replaces the current vocabulary with the one from the vocab attribute of the current node, if set.
+     *
+     * @param DOMNode     $node       The DOMNode that may contain a vocab attribute.
+     * @param string|null $vocabulary The URL of the vocabulary in use, if any.
+     *
+     * @return string|null The updated vocabulary URL, if any.
+     */
+    private function updateVocabulary(DOMNode $node, ?string $vocabulary) : ?string
+    {
+        $vocab = $node->attributes->getNamedItem('vocab');
+
+        if ($vocab !== null) {
+            $vocabularyCandidate = $this->checkVocabularyUrl($vocab->textContent);
+
+            if ($vocabularyCandidate !== null) {
+                $vocabulary = $vocabularyCandidate;
+            }
+        }
+
+        return $vocabulary;
     }
 
     /**
