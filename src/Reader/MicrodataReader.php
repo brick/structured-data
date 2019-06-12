@@ -17,6 +17,8 @@ use function Sabre\Uri\resolve;
 /**
  * Reads Microdata embedded into a HTML document.
  *
+ * https://www.w3.org/TR/microdata/
+ *
  * @todo support for the itemref attribute
  */
 class MicrodataReader implements SchemaReader
@@ -34,10 +36,11 @@ class MicrodataReader implements SchemaReader
          * https://www.w3.org/TR/microdata/#associating-names-with-items
          */
         $nodes = $xpath->query('//*[@itemscope and not(@itemprop)]');
+        $nodes = iterator_to_array($nodes);
 
         return array_map(function(DOMNode $node) use ($xpath, $url) {
             return $this->nodeToItem($node, $xpath, $url);
-        }, iterator_to_array($nodes));
+        }, $nodes);
     }
 
     /**
@@ -92,10 +95,11 @@ class MicrodataReader implements SchemaReader
 
         // Find all nested properties
         $itemprops = $xpath->query('.//*[@itemprop]', $node);
+        $itemprops = iterator_to_array($itemprops);
 
         // Exclude properties that are inside a nested item; XPath does not seem to provide a way to do this.
         // See: https://stackoverflow.com/q/26365495/759866
-        $itemprops = array_filter(iterator_to_array($itemprops), function(DOMNode $itemprop) use ($node, $xpath) {
+        $itemprops = array_filter($itemprops, function(DOMNode $itemprop) use ($node, $xpath) {
             for (;;) {
                 $itemprop = $itemprop->parentNode;
 
