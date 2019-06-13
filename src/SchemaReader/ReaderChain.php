@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Brick\Schema\Reader;
+namespace Brick\Schema\SchemaReader;
 
 use Brick\Schema\SchemaReader;
 
