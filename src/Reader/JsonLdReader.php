@@ -41,6 +41,10 @@ class JsonLdReader implements SchemaReader
         $nodes = $xpath->query('//script[@type="application/ld+json"]');
         $nodes = iterator_to_array($nodes);
 
+        if (! $nodes) {
+            return [];
+        }
+
         $items = array_map(function(DOMNode $node) use ($url) {
             return $this->readJson($node->textContent, $url);
         }, $nodes);
