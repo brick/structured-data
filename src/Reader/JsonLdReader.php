@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Brick\StructuredData\SchemaReader;
+namespace Brick\StructuredData\Reader;
 
 use Brick\StructuredData\Item;
-use Brick\StructuredData\SchemaReader;
+use Brick\StructuredData\Reader;
 
 use stdClass;
 
@@ -29,7 +29,7 @@ use function Sabre\Uri\resolve;
  *
  * https://json-ld.org/spec/latest/json-ld/
  */
-class JsonLdReader implements SchemaReader
+class JsonLdReader implements Reader
 {
     /**
      * @inheritDoc

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Brick\StructuredData\SchemaReader;
+namespace Brick\StructuredData\Reader;
 
 use Brick\StructuredData\Item;
-use Brick\StructuredData\SchemaReader;
+use Brick\StructuredData\Reader;
 
 use DOMDocument;
 use DOMNode;
@@ -21,7 +21,7 @@ use function Sabre\Uri\resolve;
  *
  * @todo support for the itemref attribute
  */
-class MicrodataReader implements SchemaReader
+class MicrodataReader implements Reader
 {
     /**
      * @inheritDoc

@@ -7,9 +7,9 @@ namespace Brick\StructuredData;
 use DOMDocument;
 
 /**
- * Common interface for readers of each syntax: Microdata, RDFa Lite, JSON-LD.
+ * Common interface for readers of each format: Microdata, RDFa Lite, JSON-LD.
  */
-interface SchemaReader
+interface Reader
 {
     /**
      * Reads the items contained in the given document.

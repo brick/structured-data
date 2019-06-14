@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Brick\StructuredData\SchemaReader;
+namespace Brick\StructuredData\Reader;
 
 use Brick\StructuredData\Item;
-use Brick\StructuredData\SchemaReader;
+use Brick\StructuredData\Reader;
 
 use DOMDocument;
 use DOMNode;
@@ -23,7 +23,7 @@ use function Sabre\Uri\build;
  *
  * @todo support for the prefix attribute; only predefined prefixes are supported right now
  */
-class RdfaLiteReader implements SchemaReader
+class RdfaLiteReader implements Reader
 {
     /**
      * The predefined RDFa prefixes.

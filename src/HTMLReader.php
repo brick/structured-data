@@ -9,18 +9,18 @@ use DOMDocument;
 class HTMLReader
 {
     /**
-     * @var SchemaReader
+     * @var Reader
      */
-    private $schemaReader;
+    private $reader;
 
     /**
-     * Reader constructor.
+     * HTMLReader constructor.
      *
-     * @param SchemaReader $schemaReader
+     * @param Reader $reader
      */
-    public function __construct(SchemaReader $schemaReader)
+    public function __construct(Reader $reader)
     {
-        $this->schemaReader = $schemaReader;
+        $this->reader = $reader;
     }
 
     /**
@@ -37,6 +37,6 @@ class HTMLReader
         $document = new DOMDocument();
         $document->loadHTMLFile($file, LIBXML_NOWARNING | LIBXML_NOERROR);
 
-        return $this->schemaReader->read($document, $url);
+        return $this->reader->read($document, $url);
     }
 }

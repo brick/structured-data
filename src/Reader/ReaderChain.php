@@ -2,28 +2,28 @@
 
 declare(strict_types=1);
 
-namespace Brick\StructuredData\SchemaReader;
+namespace Brick\StructuredData\Reader;
 
-use Brick\StructuredData\SchemaReader;
+use Brick\StructuredData\Reader;
 
 use DOMDocument;
 
 /**
  * Chains several schema readers and returns the aggregate results.
  */
-class ReaderChain implements SchemaReader
+class ReaderChain implements Reader
 {
     /**
-     * @var SchemaReader[]
+     * @var Reader[]
      */
     private $readers;
 
     /**
      * ReaderChain constructor.
      *
-     * @param SchemaReader ...$readers
+     * @param Reader ...$readers
      */
-    public function __construct(SchemaReader ...$readers)
+    public function __construct(Reader ...$readers)
     {
         $this->readers = $readers;
     }
