@@ -32,6 +32,26 @@ use function Sabre\Uri\resolve;
 class JsonLdReader implements Reader
 {
     /**
+     * @var string[]
+     */
+    private $iriProperties;
+
+    /**
+     * JsonLdReader constructor.
+     *
+     * Because this naive implementation cannot parse contexts, it accepts a hardcoded list of properties whose values
+     * will be considered as IRIs and resolved relative to the current URL.
+     *
+     * Example: ['http://schema.org/image', 'http://schema.org/url']
+     *
+     * @param string[] $iriProperties
+     */
+    public function __construct(array $iriProperties = [])
+    {
+        $this->iriProperties = $iriProperties;
+    }
+
+    /**
      * @inheritDoc
      */
     public function read(DOMDocument $document, string $url) : array
@@ -148,11 +168,11 @@ class JsonLdReader implements Reader
                         continue; // no nested arrays
                     }
 
-                    $theValue = $this->getPropertyValue($theValue, $url, $vocabulary);
+                    $theValue = $this->getPropertyValue($name, $theValue, $url, $vocabulary);
                     $result->addProperty($name, $theValue);
                 }
             } else {
-                $value = $this->getPropertyValue($value, $url, $vocabulary);
+                $value = $this->getPropertyValue($name, $value, $url, $vocabulary);
                 $result->addProperty($name, $value);
             }
         }
@@ -176,14 +196,25 @@ class JsonLdReader implements Reader
     }
 
     /**
+     * @param string      $name       The property name.
      * @param mixed       $value      The property value. Any JSON type but an array.
      * @param string      $url        The URL the document was retrieved from, for relative URL resolution.
      * @param string|null $vocabulary The currently vocabulary URL, if any.
      *
      * @return Item|string|null
      */
-    private function getPropertyValue($value, string $url, ?string $vocabulary)
+    private function getPropertyValue(string $name, $value, string $url, ?string $vocabulary)
     {
+        if (is_string($value)) {
+            if (in_array($name, $this->iriProperties, true)) {
+                try {
+                    $value = resolve($url, $value);
+                } catch (InvalidUriException $e) {
+                    // ignore
+                }
+            }
+        }
+
         if (is_bool($value)) {
             return $value ? 'true' : 'false';
         }

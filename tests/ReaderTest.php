@@ -18,13 +18,19 @@ class ReaderTest extends TestCase
     /**
      * Tests extraction of structured data from HTML, and export to JSON-LD.
      * All URLs are resolved relative to https://example.com/path/to/page
+     *
+     * A list of schema.org IRI properties (only those relevant to the tests) is provided to JsonLdReader.
      */
     public function testHtmlToJson()
     {
+        $iriProperties = [
+            'http://schema.org/image'
+        ];
+
         $reader = new ReaderChain(
             new MicrodataReader(),
             new RdfaLiteReader(),
-            new JsonLdReader()
+            new JsonLdReader($iriProperties)
         );
 
         $htmlReader = new HTMLReader($reader);
