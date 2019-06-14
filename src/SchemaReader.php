@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Brick\Schema;
+namespace Brick\StructuredData;
 
 use DOMDocument;
 

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Brick\Schema\SchemaReader;
+namespace Brick\StructuredData\SchemaReader;
 
-use Brick\Schema\SchemaReader;
+use Brick\StructuredData\SchemaReader;
 
 use DOMDocument;
 

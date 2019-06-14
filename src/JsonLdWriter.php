@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Brick\Schema;
+namespace Brick\StructuredData;
 
 /**
  * Exports Items to JSON-LD.

@@ -1,10 +1,9 @@
 {
-  "name": "brick/schema",
+  "name": "brick/structured-data",
   "description": "Microdata, RDFa Lite & JSON-LD structured data reader",
   "type": "library",
   "keywords": [
     "Brick",
-    "Schema",
     "Structured data",
     "Microdata",
     "RDFa",
@@ -20,12 +19,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Brick\\Schema\\": "src/"
+      "Brick\\StructuredData\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Brick\\Schema\\Tests\\": "tests/"
+      "Brick\\StructuredData\\Tests\\": "tests/"
     }
   },
   "require-dev": {
