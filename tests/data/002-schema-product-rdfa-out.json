@@ -1,0 +1,45 @@
+{
+    "@type": "http://schema.org/Product",
+    "http://schema.org/name": "Kenmore White 17\" Microwave",
+    "http://schema.org/image": "https://example.com/path/to/kenmore-microwave-17in.jpg",
+    "http://schema.org/aggregateRating": {
+        "@type": "http://schema.org/AggregateRating",
+        "http://schema.org/ratingValue": "3.5",
+        "http://schema.org/reviewCount": "11"
+    },
+    "http://schema.org/offers": {
+        "@type": "http://schema.org/Offer",
+        "http://schema.org/priceCurrency": "USD",
+        "http://schema.org/price": "1000.00",
+        "http://schema.org/availability": "http://schema.org/InStock"
+    },
+    "http://schema.org/description": "0.7 cubic feet countertop microwave. Has six preset cooking categories and convenience features like Add-A-Minute and Child Lock.",
+    "http://schema.org/review": [
+        {
+            "@type": "http://schema.org/Review",
+            "http://schema.org/name": "Not a happy camper",
+            "http://schema.org/author": "Ellie",
+            "http://schema.org/datePublished": "2011-04-01",
+            "http://schema.org/reviewRating": {
+                "@type": "http://schema.org/Rating",
+                "http://schema.org/worstRating": "1",
+                "http://schema.org/ratingValue": "1",
+                "http://schema.org/bestRating": "5"
+            },
+            "http://schema.org/description": "The lamp burned out and now I have to replace it."
+        },
+        {
+            "@type": "http://schema.org/Review",
+            "http://schema.org/name": "Value purchase",
+            "http://schema.org/author": "Lucas",
+            "http://schema.org/datePublished": "2011-03-25",
+            "http://schema.org/reviewRating": {
+                "@type": "http://schema.org/Rating",
+                "http://schema.org/worstRating": "1",
+                "http://schema.org/ratingValue": "4",
+                "http://schema.org/bestRating": "5"
+            },
+            "http://schema.org/description": "Great microwave for the price. It is small and fits in my apartment."
+        }
+    ]
+}
