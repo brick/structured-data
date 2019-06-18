@@ -20,8 +20,15 @@ class ReaderTest extends TestCase
      * All URLs are resolved relative to https://example.com/path/to/page
      *
      * A list of schema.org IRI properties (only those relevant to the tests) is provided to JsonLdReader.
+     *
+     * @dataProvider providerHtmlToJson
+     *
+     * @param string $htmlFile     The HTML file containing the structured data.
+     * @param string $expectedJson The expected JSON-LD output.
+     *
+     * @return void
      */
-    public function testHtmlToJson()
+    public function testHtmlToJson(string $htmlFile, string $expectedJson) : void
     {
         $iriProperties = [
             'http://schema.org/image'
@@ -36,16 +43,24 @@ class ReaderTest extends TestCase
         $htmlReader = new HTMLReader($reader);
         $jsonLdWriter = new JsonLdWriter();
 
+        $items = $htmlReader->read($htmlFile, 'https://example.com/path/to/page');
+        $actualJson = $jsonLdWriter->write(...$items);
+
+        self::assertSame($expectedJson, $actualJson);
+    }
+
+    /**
+     * @return iterable
+     */
+    public function providerHtmlToJson() : iterable
+    {
         $htmlFiles = glob(__DIR__ . '/data/*-in.html');
 
         foreach ($htmlFiles as $htmlFile) {
             $jsonFile = preg_replace('/\-in\.html$/', '-out.json', $htmlFile);
             $expectedJson = rtrim(file_get_contents($jsonFile));
 
-            $items = $htmlReader->read($htmlFile, 'https://example.com/path/to/page');
-            $actualJson = $jsonLdWriter->write(...$items);
-
-            self::assertSame($expectedJson, $actualJson);
+            yield [$htmlFile, $expectedJson];
         }
     }
 }
