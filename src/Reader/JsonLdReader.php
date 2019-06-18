@@ -163,11 +163,12 @@ class JsonLdReader implements Reader
             $name = $this->resolveTerm($name, $vocabulary);
 
             if (is_array($value)) {
-                foreach ($value as $theValue) {
-                    if (is_array($theValue)) {
-                        continue; // no nested arrays
-                    }
+                // Flatten the array: not sure if this is required by the JSON-LD standard, but some websites output
+                // nested arrays such as "offer": [[ { ... } ]], and Google Structured Data Testing Tool does recognize
+                // this syntax, so we're doing the same here.
+                $value = $this->flattenArray($value);
 
+                foreach ($value as $theValue) {
                     $theValue = $this->getPropertyValue($name, $theValue, $url, $vocabulary);
                     $result->addProperty($name, $theValue);
                 }
@@ -176,6 +177,26 @@ class JsonLdReader implements Reader
                 $result->addProperty($name, $value);
             }
         }
+
+        return $result;
+    }
+
+    /**
+     * Flattens a potentially multidimensional array.
+     *
+     * The result array contains no nested arrays.
+     *
+     * @param array $array
+     *
+     * @return array
+     */
+    private function flattenArray(array $array) : array
+    {
+        $result = [];
+
+        array_walk_recursive($array, function($a) use (& $result) {
+            $result[] = $a;
+        });
 
         return $result;
     }

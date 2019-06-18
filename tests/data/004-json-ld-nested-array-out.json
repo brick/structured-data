@@ -1,0 +1,33 @@
+{
+    "@type": "https://schema.org/ItemPage",
+    "https://schema.org/name": "SomeProduct",
+    "https://schema.org/mainEntity": {
+        "@type": "https://schema.org/Product",
+        "https://schema.org/itemCondition": "https://schema.org/NewCondition",
+        "https://schema.org/name": "SomeProduct",
+        "https://schema.org/offers": [
+            "Test",
+            {
+                "@type": "https://schema.org/Offer",
+                "https://schema.org/itemCondition": "https://schema.org/NewCondition",
+                "https://schema.org/price": "12.99",
+                "https://schema.org/priceCurrency": "EUR",
+                "https://schema.org/gtin13": "0123456789012"
+            },
+            {
+                "@type": "https://schema.org/Offer",
+                "https://schema.org/itemCondition": "https://schema.org/NewCondition",
+                "https://schema.org/price": "49.99",
+                "https://schema.org/priceCurrency": "EUR",
+                "https://schema.org/gtin13": "1234567890123"
+            },
+            {
+                "@type": "https://schema.org/Offer",
+                "https://schema.org/itemCondition": "https://schema.org/NewCondition",
+                "https://schema.org/price": "91.89",
+                "https://schema.org/priceCurrency": "EUR",
+                "https://schema.org/gtin13": "nocode"
+            }
+        ]
+    }
+}

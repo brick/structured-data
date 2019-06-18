@@ -1,0 +1,40 @@
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "ItemPage",
+    "name": "SomeProduct",
+    "mainEntity": {
+        "@type": "Product",
+        "itemCondition": "https://schema.org/NewCondition",
+        "name": "SomeProduct",
+        "offers": [
+            "Test",
+            [
+                [
+                    {
+                        "@type": "Offer",
+                        "itemCondition": "https://schema.org/NewCondition",
+                        "price": "12.99",
+                        "priceCurrency": "EUR",
+                        "gtin13": "0123456789012"
+                    }
+                ],
+                {
+                    "@type": "Offer",
+                    "itemCondition": "https://schema.org/NewCondition",
+                    "price": "49.99",
+                    "priceCurrency": "EUR",
+                    "gtin13": "1234567890123"
+                },
+                {
+                    "@type": "Offer",
+                    "itemCondition": "https://schema.org/NewCondition",
+                    "price": "91.89",
+                    "priceCurrency": "EUR",
+                    "gtin13": "nocode"
+                }
+            ]
+        ]
+    }
+}
+</script>
