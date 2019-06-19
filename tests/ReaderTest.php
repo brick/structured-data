@@ -43,7 +43,7 @@ class ReaderTest extends TestCase
         $htmlReader = new HTMLReader($reader);
         $jsonLdWriter = new JsonLdWriter();
 
-        $items = $htmlReader->read($htmlFile, 'https://example.com/path/to/page');
+        $items = $htmlReader->readFile($htmlFile, 'https://example.com/path/to/page');
         $actualJson = $jsonLdWriter->write(...$items);
 
         self::assertSame($expectedJson, $actualJson);
