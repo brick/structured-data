@@ -170,11 +170,17 @@ class JsonLdReader implements Reader
 
                 foreach ($value as $theValue) {
                     $theValue = $this->getPropertyValue($name, $theValue, $url, $vocabulary);
-                    $result->addProperty($name, $theValue);
+
+                    if ($theValue !== null) {
+                        $result->addProperty($name, $theValue);
+                    }
                 }
             } else {
                 $value = $this->getPropertyValue($name, $value, $url, $vocabulary);
-                $result->addProperty($name, $value);
+
+                if ($value !== null) {
+                    $result->addProperty($name, $value);
+                }
             }
         }
 
@@ -218,11 +224,11 @@ class JsonLdReader implements Reader
 
     /**
      * @param string      $name       The property name.
-     * @param mixed       $value      The property value. Any JSON type but an array.
+     * @param mixed       $value      The property value. Any JSON type.
      * @param string      $url        The URL the document was retrieved from, for relative URL resolution.
      * @param string|null $vocabulary The currently vocabulary URL, if any.
      *
-     * @return Item|string|null
+     * @return Item|string|null The value, or NULL if the input value is NULL or an array.
      */
     private function getPropertyValue(string $name, $value, string $url, ?string $vocabulary)
     {
