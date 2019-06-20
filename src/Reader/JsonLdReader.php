@@ -91,9 +91,13 @@ class JsonLdReader implements Reader
         }
 
         if (is_object($data)) {
-            $item = $this->readItem($data, $url, null);
+            if (isset($data->{'@graph'}) && is_array($data->{'@graph'})) {
+                $data = $data->{'@graph'};
+            } else {
+                $item = $this->readItem($data, $url, null);
 
-            return [$item];
+                return [$item];
+            }
         }
 
         if (is_array($data)) {

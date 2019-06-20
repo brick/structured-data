@@ -1,0 +1,57 @@
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org/",
+    "@graph": [
+        {
+            "@context": "https://schema.org/",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "item": {
+                        "name": "Home",
+                        "@id": "http://www.example.com"
+                    }
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "item": {
+                        "name": "Categories",
+                        "@id": "http://www.example.com/category"
+                    }
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 3,
+                    "item": {
+                        "name": "Product",
+                        "@id": "http://www.example.com/category/product/123"
+                    }
+                }
+            ]
+        },
+        {
+            "@context": "https://schema.org/",
+            "@type": "Product",
+            "@id": "http://www.example.com/category/product/123",
+            "name": "Product name",
+             "offers": [
+                {
+                    "@type": "AggregateOffer",
+                    "lowPrice": "5.90",
+                    "highPrice": "92.90",
+                    "priceCurrency": "EUR",
+                    "availability": "https://schema.org/InStock",
+                    "seller": {
+                        "@type": "Organization",
+                        "name": "Example",
+                        "url": "http://www.example.com"
+                    }
+                }
+            ]
+        }
+    ]
+}
+</script>

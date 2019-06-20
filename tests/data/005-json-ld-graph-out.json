@@ -1,0 +1,51 @@
+[
+    {
+        "@type": "https://schema.org/BreadcrumbList",
+        "https://schema.org/itemListElement": [
+            {
+                "@type": "https://schema.org/ListItem",
+                "https://schema.org/position": "1",
+                "https://schema.org/item": {
+                    "@type": [],
+                    "@id": "http://www.example.com",
+                    "https://schema.org/name": "Home"
+                }
+            },
+            {
+                "@type": "https://schema.org/ListItem",
+                "https://schema.org/position": "2",
+                "https://schema.org/item": {
+                    "@type": [],
+                    "@id": "http://www.example.com/category",
+                    "https://schema.org/name": "Categories"
+                }
+            },
+            {
+                "@type": "https://schema.org/ListItem",
+                "https://schema.org/position": "3",
+                "https://schema.org/item": {
+                    "@type": [],
+                    "@id": "http://www.example.com/category/product/123",
+                    "https://schema.org/name": "Product"
+                }
+            }
+        ]
+    },
+    {
+        "@type": "https://schema.org/Product",
+        "@id": "http://www.example.com/category/product/123",
+        "https://schema.org/name": "Product name",
+        "https://schema.org/offers": {
+            "@type": "https://schema.org/AggregateOffer",
+            "https://schema.org/lowPrice": "5.90",
+            "https://schema.org/highPrice": "92.90",
+            "https://schema.org/priceCurrency": "EUR",
+            "https://schema.org/availability": "https://schema.org/InStock",
+            "https://schema.org/seller": {
+                "@type": "https://schema.org/Organization",
+                "https://schema.org/name": "Example",
+                "https://schema.org/url": "http://www.example.com"
+            }
+        }
+    }
+]
