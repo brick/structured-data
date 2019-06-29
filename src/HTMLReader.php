@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Brick\StructuredData;
 
-use DOMDocument;
-
 class HTMLReader
 {
     /**
@@ -34,8 +32,7 @@ class HTMLReader
      */
     public function read(string $html, string $url) : array
     {
-        $document = new DOMDocument();
-        $document->loadHTML($html, LIBXML_NOWARNING | LIBXML_NOERROR);
+        $document = DOMBuilder::fromHTML($html);
 
         return $this->reader->read($document, $url);
     }
@@ -51,8 +48,7 @@ class HTMLReader
      */
     public function readFile(string $file, string $url) : array
     {
-        $document = new DOMDocument();
-        $document->loadHTMLFile($file, LIBXML_NOWARNING | LIBXML_NOERROR);
+        $document = DOMBuilder::fromHTMLFile($file);
 
         return $this->reader->read($document, $url);
     }
