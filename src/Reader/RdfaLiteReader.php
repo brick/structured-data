@@ -19,7 +19,7 @@ use function Sabre\Uri\build;
 /**
  * Reads RDFa Lite embedded into a HTML document.
  *
- * https://www.w3.org/TR/rdfa-lite/#resource
+ * https://www.w3.org/TR/rdfa-lite/
  *
  * @todo support for the prefix attribute; only predefined prefixes are supported right now
  */

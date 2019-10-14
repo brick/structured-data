@@ -16,7 +16,7 @@ interface Reader
      *
      * @param DOMDocument $document The DOM document to read.
      * @param string      $url      The URL the document was retrieved from. This will be used only to resolve relative
-     *                              URLs in property values. No attempt will be performed to connect to this URL.
+     *                              URLs in property values. The implementation must not attempt to connect to this URL.
      *
      * @return Item[] The top-level items.
      */
