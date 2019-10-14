@@ -123,7 +123,7 @@ foreach ($items as $item) {
 }
 ```
 
-### Known issues
+### Current limitations
 
 - No support for the `itemref` attribute in `MicroDataReader`
 - No support for the `prefix` attribute in `RdfaLiteReader`; only [predefined prefixes](https://www.w3.org/2011/rdfa-context/rdfa-1.1) are supported right now
