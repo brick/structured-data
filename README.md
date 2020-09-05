@@ -8,7 +8,7 @@ This library is a foundation to read schema.org structured data in [brick/schema
 but may be used with other vocabularies.
 
 [![Build Status](https://secure.travis-ci.org/brick/structured-data.svg?branch=master)](http://travis-ci.org/brick/structured-data)
-[![Coverage Status](https://coveralls.io/repos/brick/structured-data/badge.svg?branch=master)](https://coveralls.io/r/brick/structured-data?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/brick/structured-data/badge.svg?branch=master)](https://coveralls.io/github/brick/structured-data?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/brick/structured-data/v/stable)](https://packagist.org/packages/brick/structured-data)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
 
