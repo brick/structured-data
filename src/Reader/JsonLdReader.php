@@ -9,9 +9,9 @@ use Brick\StructuredData\Reader;
 
 use stdClass;
 
-use DOMDocument;
-use DOMNode;
-use DOMXPath;
+use DOM\HTMLDocument;
+use DOM\Node;
+use DOM\XPath;
 
 use Sabre\Uri\InvalidUriException;
 use function Sabre\Uri\build;
@@ -54,9 +54,9 @@ class JsonLdReader implements Reader
     /**
      * @inheritDoc
      */
-    public function read(DOMDocument $document, string $url) : array
+    public function read(HTMLDocument $document, string $url) : array
     {
-        $xpath = new DOMXPath($document);
+        $xpath = new XPath($document);
 
         $nodes = $xpath->query('//script[@type="application/ld+json"]');
         $nodes = iterator_to_array($nodes);
@@ -65,7 +65,7 @@ class JsonLdReader implements Reader
             return [];
         }
 
-        $items = array_map(function(DOMNode $node) use ($url) {
+        $items = array_map(function(Node $node) use ($url) {
             return $this->readJson($node->textContent, $url);
         }, $nodes);
 

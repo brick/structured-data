@@ -6,7 +6,7 @@ namespace Brick\StructuredData\Reader;
 
 use Brick\StructuredData\Reader;
 
-use DOMDocument;
+use DOM\HTMLDocument;
 
 /**
  * Chains several schema readers and returns the aggregate results.
@@ -31,7 +31,7 @@ class ReaderChain implements Reader
     /**
      * @inheritDoc
      */
-    public function read(DOMDocument $document, string $url) : array
+    public function read(HTMLDocument $document, string $url) : array
     {
         if (! $this->readers) {
             return [];

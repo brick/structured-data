@@ -7,9 +7,9 @@ namespace Brick\StructuredData\Reader;
 use Brick\StructuredData\Item;
 use Brick\StructuredData\Reader;
 
-use DOMDocument;
-use DOMNode;
-use DOMXPath;
+use DOM\HTMLDocument;
+use DOM\Node;
+use DOM\XPath;
 
 use Sabre\Uri\InvalidUriException;
 use function Sabre\Uri\resolve;
@@ -87,9 +87,9 @@ class RdfaLiteReader implements Reader
     /**
      * @inheritDoc
      */
-    public function read(DOMDocument $document, string $url) : array
+    public function read(HTMLDocument $document, string $url) : array
     {
-        $xpath = new DOMXPath($document);
+        $xpath = new XPath($document);
 
         /**
          * Top-level item have a typeof attribute and no property attribute.
@@ -97,16 +97,16 @@ class RdfaLiteReader implements Reader
         $nodes = $xpath->query('//*[@typeof and not(@property)]');
         $nodes = iterator_to_array($nodes);
 
-        return array_map(function(DOMNode $node) use ($xpath, $url) {
+        return array_map(function(Node $node) use ($xpath, $url) {
             return $this->nodeToItem($node, $xpath, $url, self::PREDEFINED_PREFIXES, null);
         }, $nodes);
     }
 
     /**
-     * Extracts information from a DOMNode into an Item.
+     * Extracts information from a Node into an Item.
      *
-     * @param DOMNode     $node       A DOMNode representing an element with the typeof attribute.
-     * @param DOMXPath    $xpath      A DOMXPath object created from the node's document element.
+     * @param Node        $node       A Node representing an element with the typeof attribute.
+     * @param XPath       $xpath      A XPath object created from the node's document element.
      * @param string      $url        The URL the document was retrieved from, for relative URL resolution.
      * @param string[]    $prefixes   The prefixes in use, as a map of prefix to vocabulary URL.
      * @param string|null $vocabulary The URL of the vocabulary in use, if any.
@@ -114,7 +114,7 @@ class RdfaLiteReader implements Reader
      *
      * @return Item
      */
-    private function nodeToItem(DOMNode $node, DOMXPath $xpath, string $url, array $prefixes, ?string $vocabulary) : Item
+    private function nodeToItem(Node $node, XPath $xpath, string $url, array $prefixes, ?string $vocabulary) : Item
     {
         $vocabulary = $this->updateVocabulary($node, $vocabulary);
 
@@ -162,7 +162,7 @@ class RdfaLiteReader implements Reader
 
         // Exclude properties that are inside a nested item; XPath does not seem to provide a way to do this.
         // See: https://stackoverflow.com/q/26365495/759866
-        $properties = array_filter($properties, function(DOMNode $itemprop) use ($node, $xpath) {
+        $properties = array_filter($properties, function(Node $itemprop) use ($node, $xpath) {
             for (;;) {
                 $itemprop = $itemprop->parentNode;
 
@@ -179,7 +179,7 @@ class RdfaLiteReader implements Reader
             return false;
         });
 
-        /** @var DOMNode[] $properties */
+        /** @var Node[] $properties */
         foreach ($properties as $property) {
             $names = $property->attributes->getNamedItem('property')->textContent;
 
@@ -263,12 +263,12 @@ class RdfaLiteReader implements Reader
     /**
      * Replaces the current vocabulary with the one from the vocab attribute of the current node, if set.
      *
-     * @param DOMNode     $node       The DOMNode that may contain a vocab attribute.
+     * @param Node        $node       The Node that may contain a vocab attribute.
      * @param string|null $vocabulary The URL of the vocabulary in use, if any.
      *
      * @return string|null The updated vocabulary URL, if any.
      */
-    private function updateVocabulary(DOMNode $node, ?string $vocabulary) : ?string
+    private function updateVocabulary(Node $node, ?string $vocabulary) : ?string
     {
         $vocab = $node->attributes->getNamedItem('vocab');
 
@@ -314,15 +314,15 @@ class RdfaLiteReader implements Reader
     /**
      * https://www.w3.org/TR/microdata/#values
      *
-     * @param DOMNode     $node       A DOMNode representing an element with the property attribute.
-     * @param DOMXPath    $xpath      A DOMXPath object created from the node's document element.
+     * @param Node        $node       A Node representing an element with the property attribute.
+     * @param XPath       $xpath      A XPath object created from the node's document element.
      * @param string      $url        The URL the document was retrieved from, for relative URL resolution.
      * @param string[]    $prefixes   The prefixes in use, as a map of prefix to vocabulary URL.
      * @param string|null $vocabulary The URL of the vocabulary in use, if any.
      *
      * @return Item|string
      */
-    private function getPropertyValue(DOMNode $node, DOMXPath $xpath, string $url, array $prefixes, ?string $vocabulary)
+    private function getPropertyValue(Node $node, XPath $xpath, string $url, array $prefixes, ?string $vocabulary)
     {
         // If the element also has an typeof attribute, create an item from the element
         $attr = $node->attributes->getNamedItem('typeof');
