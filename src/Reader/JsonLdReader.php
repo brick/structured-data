@@ -6,9 +6,9 @@ namespace Brick\StructuredData\Reader;
 
 use Brick\StructuredData\Item;
 use Brick\StructuredData\Reader;
-use DOMDocument;
-use DOMNode;
-use DOMXPath;
+use DOM\HTMLDocument;
+use DOM\Node;
+use DOM\XPath;
 use Override;
 use Sabre\Uri\InvalidUriException;
 use stdClass;
@@ -66,9 +66,9 @@ final class JsonLdReader implements Reader
     }
 
     #[Override]
-    public function read(DOMDocument $document, string $url): array
+    public function read(HTMLDocument $document, string $url): array
     {
-        $xpath = new DOMXPath($document);
+        $xpath = new XPath($document);
 
         $nodes = $xpath->query('//script[@type="application/ld+json"]');
         $nodes = iterator_to_array($nodes);
@@ -78,7 +78,7 @@ final class JsonLdReader implements Reader
         }
 
         $items = array_map(
-            fn (DOMNode $node) => $this->readJson($node->textContent, $url),
+            fn (Node $node) => $this->readJson($node->textContent, $url),
             $nodes,
         );
 

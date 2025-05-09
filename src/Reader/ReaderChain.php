@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Brick\StructuredData\Reader;
 
 use Brick\StructuredData\Reader;
-use DOMDocument;
+use DOM\HTMLDocument;
 use Override;
 
 use function array_merge;
@@ -29,7 +29,7 @@ final class ReaderChain implements Reader
     }
 
     #[Override]
-    public function read(DOMDocument $document, string $url): array
+    public function read(HTMLDocument $document, string $url): array
     {
         if (! $this->readers) {
             return [];

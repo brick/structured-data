@@ -4,32 +4,27 @@ declare(strict_types=1);
 
 namespace Brick\StructuredData;
 
-use DOMDocument;
+use DOM\HTMLDocument;
 
+use const DOM\HTML_NO_DEFAULT_NS;
 use const LIBXML_NOERROR;
 use const LIBXML_NOWARNING;
 
 final class DOMBuilder
 {
     /**
-     * Builds a DOMDocument from an HTML string.
+     * Builds a HTMLDocument from an HTML string.
      */
-    public static function fromHTML(string $html): DOMDocument
+    public static function fromHTML(string $html) : HTMLDocument
     {
-        $document = new DOMDocument();
-        $document->loadHTML($html, LIBXML_NOWARNING | LIBXML_NOERROR);
-
-        return $document;
+        return HTMLDocument::createFromString($html, LIBXML_NOERROR | HTML_NO_DEFAULT_NS);
     }
 
     /**
-     * Builds a DOMDocument from an HTML file.
+     * Builds a HTMLDocument from an HTML file.
      */
-    public static function fromHTMLFile(string $file): DOMDocument
+    public static function fromHTMLFile(string $file) : HTMLDocument
     {
-        $document = new DOMDocument();
-        $document->loadHTMLFile($file, LIBXML_NOWARNING | LIBXML_NOERROR);
-
-        return $document;
+        return HTMLDocument::createFromFile($file,  LIBXML_NOERROR | HTML_NO_DEFAULT_NS);
     }
 }
