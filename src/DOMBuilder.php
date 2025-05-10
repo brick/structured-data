@@ -6,6 +6,8 @@ namespace Brick\StructuredData;
 
 use DOM\HTMLDocument;
 
+use const DOM\HTML_NO_DEFAULT_NS;
+
 class DOMBuilder
 {
     /**
@@ -17,7 +19,7 @@ class DOMBuilder
      */
     public static function fromHTML(string $html) : HTMLDocument
     {
-        return HTMLDocument::createFromString($html, LIBXML_NOERROR);
+        return HTMLDocument::createFromString($html, LIBXML_NOERROR | HTML_NO_DEFAULT_NS);
     }
 
     /**
@@ -29,6 +31,6 @@ class DOMBuilder
      */
     public static function fromHTMLFile(string $file) : HTMLDocument
     {
-        return HTMLDocument::createFromFile($file,  LIBXML_NOERROR);
+        return HTMLDocument::createFromFile($file,  LIBXML_NOERROR | HTML_NO_DEFAULT_NS);
     }
 }
