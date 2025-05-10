@@ -186,7 +186,7 @@ class MicrodataReader implements Reader
          * attribute, let proposed value be the result of resolving that attribute's textContent. If proposed value is a
          * valid absolute URL: The value is proposed value. Otherwise the value is the empty string.
          */
-        $elements = ['AUDIO', 'EMBED', 'IFRAME', 'IMG', 'SOURCE', 'TRACK', 'VIDEO'];
+        $elements = ['audio', 'embed', 'iframe', 'img', 'source', 'track', 'video'];
 
         if (in_array($node->nodeName, $elements, true)) {
             $attr = $node->attributes->getNamedItem('src');
@@ -205,7 +205,7 @@ class MicrodataReader implements Reader
          * the result of resolving that attribute's textContent. If proposed value is a valid absolute URL: The value is
          * proposed value. Otherwise the value is the empty string.
          */
-        $elements = ['A', 'AREA', 'LINK'];
+        $elements = ['a', 'area', 'link'];
 
         if (in_array($node->nodeName, $elements, true)) {
             $attr = $node->attributes->getNamedItem('href');
@@ -224,7 +224,7 @@ class MicrodataReader implements Reader
          * resolving that attribute's textContent. If proposed value is a valid absolute URL: The value is proposed
          * value. Otherwise the value is the empty string.
          */
-        if ($node->nodeName === 'OBJECT') {
+        if ($node->nodeName === 'object') {
             $attr = $node->attributes->getNamedItem('data');
 
             if ($attr !== null) {
@@ -240,7 +240,7 @@ class MicrodataReader implements Reader
          * If the element is a data or meter element: if the element has a value attribute, the value is that
          * attribute's textContent.
          */
-        if ($node->nodeName === 'DATA' || $node->nodeName === 'METER') {
+        if ($node->nodeName === 'data' || $node->nodeName === 'meter') {
             $attr = $node->attributes->getNamedItem('value');
 
             if ($attr !== null) {
@@ -252,7 +252,7 @@ class MicrodataReader implements Reader
          * If the element is a time element: if the element has a datetime attribute, the value is that attribute's
          * textContent.
          */
-        if ($node->nodeName === 'TIME') {
+        if ($node->nodeName === 'time') {
             $attr = $node->attributes->getNamedItem('datetime');
 
             if ($attr !== null) {
