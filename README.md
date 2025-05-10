@@ -22,7 +22,7 @@ composer require brick/structured-data
 
 ### Requirements
 
-This library requires PHP 7.2 or later. It makes use of the following extensions:
+This library requires PHP 8.4 or later. It makes use of the following extensions:
 
 - [dom](https://www.php.net/manual/en/book.dom.php)
 - [json](https://www.php.net/manual/en/book.json.php)
@@ -54,13 +54,13 @@ interface Brick\StructuredData\Reader
     /**
      * Reads the items contained in the given document.
      *
-     * @param DOMDocument $document The DOM document to read.
-     * @param string      $url      The URL the document was retrieved from. This will be used only to resolve relative
-     *                              URLs in property values. No attempt will be performed to connect to this URL.
+     * @param HTMLDocument $document The DOM document to read.
+     * @param string       $url      The URL the document was retrieved from. This will be used only to resolve relative
+     *                               URLs in property values. No attempt will be performed to connect to this URL.
      *
      * @return Item[] The top-level items.
      */
-    public function read(DOMDocument $document, string $url) : array;
+    public function read(HTMLDocument $document, string $url) : array;
 }
 ```
 
@@ -92,7 +92,7 @@ use Brick\StructuredData\Item;
 $microdataReader = new MicrodataReader();
 
 // Wrap into HTMLReader to be able to read HTML strings or files directly,
-// i.e. without manually converting them to DOMDocument instances first
+// i.e. without manually converting them to HTMLDocument instances first
 $htmlReader = new HTMLReader($microdataReader);
 
 // Replace this URL with that of a website you know is using Microdata
