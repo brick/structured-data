@@ -7,6 +7,7 @@ namespace Brick\StructuredData\Reader;
 use Brick\StructuredData\Item;
 use Brick\StructuredData\Reader;
 
+use Override;
 use stdClass;
 
 use DOMDocument;
@@ -51,9 +52,7 @@ final class JsonLdReader implements Reader
         $this->iriProperties = $iriProperties;
     }
 
-    /**
-     * @inheritDoc
-     */
+    #[Override]
     public function read(DOMDocument $document, string $url) : array
     {
         $xpath = new DOMXPath($document);

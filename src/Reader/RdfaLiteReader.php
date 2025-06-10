@@ -11,6 +11,7 @@ use DOMDocument;
 use DOMNode;
 use DOMXPath;
 
+use Override;
 use Sabre\Uri\InvalidUriException;
 use function Sabre\Uri\resolve;
 use function Sabre\Uri\parse;
@@ -84,9 +85,7 @@ final class RdfaLiteReader implements Reader
         'xsd'     => 'http://www.w3.org/2001/XMLSchema#',
     ];
 
-    /**
-     * @inheritDoc
-     */
+    #[Override]
     public function read(DOMDocument $document, string $url) : array
     {
         $xpath = new DOMXPath($document);

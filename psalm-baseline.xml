@@ -23,9 +23,6 @@
     <MissingClosureParamType>
       <code><![CDATA[$a]]></code>
     </MissingClosureParamType>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function read(DOMDocument $document, string $url) : array]]></code>
-    </MissingOverrideAttribute>
     <MixedArgument>
       <code><![CDATA[$name]]></code>
     </MixedArgument>
@@ -71,9 +68,6 @@
             }
         }]]></code>
     </InvalidArgument>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function read(DOMDocument $document, string $url) : array]]></code>
-    </MissingOverrideAttribute>
     <PossiblyInvalidArgument>
       <code><![CDATA[function(DOMNode $itemprop) use ($node, $xpath) {
             for (;;) {
@@ -126,9 +120,6 @@
             return false;
         }]]></code>
     </InvalidArgument>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function read(DOMDocument $document, string $url) : array]]></code>
-    </MissingOverrideAttribute>
     <PossiblyInvalidArgument>
       <code><![CDATA[function(DOMNode $itemprop) use ($node, $xpath) {
             for (;;) {
@@ -167,10 +158,5 @@
       <code><![CDATA[getNamedItem]]></code>
       <code><![CDATA[isSameNode]]></code>
     </PossiblyNullReference>
-  </file>
-  <file src="src/Reader/ReaderChain.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function read(DOMDocument $document, string $url) : array]]></code>
-    </MissingOverrideAttribute>
   </file>
 </files>

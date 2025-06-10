@@ -11,6 +11,7 @@ use DOMDocument;
 use DOMNode;
 use DOMXPath;
 
+use Override;
 use Sabre\Uri\InvalidUriException;
 use function Sabre\Uri\resolve;
 
@@ -23,9 +24,7 @@ use function Sabre\Uri\resolve;
  */
 final class MicrodataReader implements Reader
 {
-    /**
-     * @inheritDoc
-     */
+    #[Override]
     public function read(DOMDocument $document, string $url) : array
     {
         $xpath = new DOMXPath($document);
