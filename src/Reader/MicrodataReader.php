@@ -111,9 +111,6 @@ final class MicrodataReader implements Reader
                     return false;
                 }
             }
-
-            // Unreachable, but makes static analysis happy
-            return false;
         });
 
         $vocabularyIdentifier = $this->getVocabularyIdentifier($types);

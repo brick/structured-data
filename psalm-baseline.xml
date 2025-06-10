@@ -69,9 +69,6 @@
                     return false;
                 }
             }
-
-            // Unreachable, but makes static analysis happy
-            return false;
         }]]></code>
     </InvalidArgument>
     <MissingOverrideAttribute>
@@ -90,9 +87,6 @@
                     return false;
                 }
             }
-
-            // Unreachable, but makes static analysis happy
-            return false;
         }]]></code>
       <code><![CDATA[function(DOMNode $node) use ($xpath, $url) {
             return $this->nodeToItem($node, $xpath, $url);
