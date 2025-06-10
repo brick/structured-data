@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="6.12.0@cf420941d061a57050b6c468ef2c778faf40aee2">
-  <file src="src/JsonLdWriter.php">
-    <MixedAssignment>
-      <code><![CDATA[$result[$name]]]></code>
-    </MixedAssignment>
-  </file>
   <file src="src/Reader/JsonLdReader.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$data]]></code>
@@ -23,14 +18,6 @@
     <MixedArrayAccess>
       <code><![CDATA[$name[0]]]></code>
     </MixedArrayAccess>
-    <MixedAssignment>
-      <code><![CDATA[$data]]></code>
-      <code><![CDATA[$name]]></code>
-      <code><![CDATA[$result[]]]></code>
-      <code><![CDATA[$theValue]]></code>
-      <code><![CDATA[$type]]></code>
-      <code><![CDATA[$value]]></code>
-    </MixedAssignment>
     <NoValue>
       <code><![CDATA[$type]]></code>
     </NoValue>
