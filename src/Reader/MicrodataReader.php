@@ -21,7 +21,7 @@ use function Sabre\Uri\resolve;
  *
  * @todo support for the itemref attribute
  */
-class MicrodataReader implements Reader
+final class MicrodataReader implements Reader
 {
     /**
      * @inheritDoc

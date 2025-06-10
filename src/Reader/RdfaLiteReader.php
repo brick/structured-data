@@ -23,7 +23,7 @@ use function Sabre\Uri\build;
  *
  * @todo support for the prefix attribute; only predefined prefixes are supported right now
  */
-class RdfaLiteReader implements Reader
+final class RdfaLiteReader implements Reader
 {
     /**
      * The predefined RDFa prefixes.

@@ -7,7 +7,7 @@ namespace Brick\StructuredData;
 /**
  * Exports Items to JSON-LD.
  */
-class JsonLdWriter
+final class JsonLdWriter
 {
     /**
      * Exports a list of Items as JSON-LD.

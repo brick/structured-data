@@ -29,7 +29,7 @@ use function Sabre\Uri\resolve;
  *
  * https://json-ld.org/spec/latest/json-ld/
  */
-class JsonLdReader implements Reader
+final class JsonLdReader implements Reader
 {
     /**
      * @var string[]

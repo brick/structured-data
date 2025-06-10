@@ -6,7 +6,7 @@ namespace Brick\StructuredData;
 
 use DOMDocument;
 
-class DOMBuilder
+final class DOMBuilder
 {
     /**
      * Builds a DOMDocument from an HTML string.

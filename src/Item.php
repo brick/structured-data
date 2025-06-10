@@ -9,7 +9,7 @@ use TypeError;
 /**
  * An item, such as a Thing in schema.org's vocabulary.
  */
-class Item
+final class Item
 {
     /**
      * The global identifier of the item, if any.

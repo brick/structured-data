@@ -11,7 +11,7 @@ use DOMDocument;
 /**
  * Chains several schema readers and returns the aggregate results.
  */
-class ReaderChain implements Reader
+final class ReaderChain implements Reader
 {
     /**
      * @var Reader[]
