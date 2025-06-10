@@ -15,7 +15,7 @@
     "ext-dom": "*",
     "ext-json": "*",
     "ext-libxml": "*",
-    "sabre/uri": "^2.1"
+    "sabre/uri": "^2.1 || ^3.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^8.0 || ^9.0",
