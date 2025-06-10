@@ -6,10 +6,7 @@ namespace Brick\StructuredData;
 
 final class HTMLReader
 {
-    /**
-     * @var Reader
-     */
-    private $reader;
+    private Reader $reader;
 
     /**
      * HTMLReader constructor.

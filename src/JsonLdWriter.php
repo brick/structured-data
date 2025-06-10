@@ -62,7 +62,7 @@ final class JsonLdWriter
      *
      * @return mixed
      */
-    private function extractIfSingle(array $values)
+    private function extractIfSingle(array $values) : mixed
     {
         if (count($values) === 1) {
             return $values[0];

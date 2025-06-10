@@ -319,10 +319,8 @@ final class RdfaLiteReader implements Reader
      * @param string      $url        The URL the document was retrieved from, for relative URL resolution.
      * @param string[]    $prefixes   The prefixes in use, as a map of prefix to vocabulary URL.
      * @param string|null $vocabulary The URL of the vocabulary in use, if any.
-     *
-     * @return Item|string
      */
-    private function getPropertyValue(DOMNode $node, DOMXPath $xpath, string $url, array $prefixes, ?string $vocabulary)
+    private function getPropertyValue(DOMNode $node, DOMXPath $xpath, string $url, array $prefixes, ?string $vocabulary) : Item|string
     {
         // If the element also has an typeof attribute, create an item from the element
         $attr = $node->attributes->getNamedItem('typeof');

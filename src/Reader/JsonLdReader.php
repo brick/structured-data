@@ -34,7 +34,7 @@ final class JsonLdReader implements Reader
     /**
      * @var string[]
      */
-    private $iriProperties;
+    private array $iriProperties;
 
     /**
      * JsonLdReader constructor.
@@ -234,7 +234,7 @@ final class JsonLdReader implements Reader
      *
      * @return Item|string|null The value, or NULL if the input value is NULL or an array.
      */
-    private function getPropertyValue(string $name, $value, string $url, ?string $vocabulary)
+    private function getPropertyValue(string $name, mixed $value, string $url, ?string $vocabulary) : Item|string|null
     {
         if (is_string($value)) {
             if (in_array($name, $this->iriProperties, true)) {

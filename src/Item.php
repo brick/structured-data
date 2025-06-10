@@ -13,24 +13,22 @@ final class Item
 {
     /**
      * The global identifier of the item, if any.
-     *
-     * @var string|null
      */
-    private $id;
+    private ?string $id;
 
     /**
      * The types this Item implements, as URLs.
      *
-     * @var array<string>
+     * @var string[]
      */
-    private $types;
+    private array $types;
 
     /**
      * The properties, as a map of property name to list of values.
      *
      * @var array<string, array<Item|string>>
      */
-    private $properties = [];
+    private array $properties = [];
 
     /**
      * Item constructor.
@@ -59,7 +57,7 @@ final class Item
      *
      * Each type is represented as a URL, e.g. http://schema.org/Product .
      *
-     * @return array<string>
+     * @return string[]
      */
     public function getTypes() : array
     {
@@ -100,12 +98,8 @@ final class Item
      *
      * @return void
      */
-    public function addProperty(string $name, $value) : void
+    public function addProperty(string $name, Item|string $value) : void
     {
-        if (! $value instanceof Item && ! is_string($value)) {
-            throw new TypeError(sprintf('Property value must be an instance of %s or a string.', Item::class));
-        }
-
         $this->properties[$name][] = $value;
     }
 }

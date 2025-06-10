@@ -158,10 +158,8 @@ final class MicrodataReader implements Reader
      * @param DOMNode  $node  A DOMNode representing an element with the itemprop attribute.
      * @param DOMXPath $xpath A DOMXPath object created from the node's document element.
      * @param string   $url   The URL the document was retrieved from, for relative URL resolution.
-     *
-     * @return Item|string
      */
-    private function getPropertyValue(DOMNode $node, DOMXPath $xpath, string $url)
+    private function getPropertyValue(DOMNode $node, DOMXPath $xpath, string $url) : Item|string
     {
         /**
          * If the element also has an itemscope attribute: the value is the item created by the element.
