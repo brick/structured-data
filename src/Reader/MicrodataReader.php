@@ -11,6 +11,7 @@ use DOMDocument;
 use DOMNode;
 use DOMXPath;
 
+use Override;
 use Sabre\Uri\InvalidUriException;
 use function Sabre\Uri\resolve;
 
@@ -21,11 +22,9 @@ use function Sabre\Uri\resolve;
  *
  * @todo support for the itemref attribute
  */
-class MicrodataReader implements Reader
+final class MicrodataReader implements Reader
 {
-    /**
-     * @inheritDoc
-     */
+    #[Override]
     public function read(DOMDocument $document, string $url) : array
     {
         $xpath = new DOMXPath($document);
@@ -38,9 +37,10 @@ class MicrodataReader implements Reader
         $nodes = $xpath->query('//*[@itemscope and not(@itemprop)]');
         $nodes = iterator_to_array($nodes);
 
-        return array_map(function(DOMNode $node) use ($xpath, $url) {
-            return $this->nodeToItem($node, $xpath, $url);
-        }, $nodes);
+        return array_map(
+            fn(DOMNode $node) => $this->nodeToItem($node, $xpath, $url),
+            $nodes,
+        );
     }
 
     /**
@@ -84,9 +84,7 @@ class MicrodataReader implements Reader
              * If the itemtype attribute is missing or parsing it in this way finds no tokens, the item is said to have
              * no item types.
              */
-            $types = array_values(array_filter($types, function(string $type) {
-                return $type !== '';
-            }));
+            $types = array_values(array_filter($types, fn(string $type) => $type !== ''));
         } else {
             $types = [];
         }
@@ -111,9 +109,6 @@ class MicrodataReader implements Reader
                     return false;
                 }
             }
-
-            // Unreachable, but makes static analysis happy
-            return false;
         });
 
         $vocabularyIdentifier = $this->getVocabularyIdentifier($types);
@@ -139,7 +134,7 @@ class MicrodataReader implements Reader
                  * We therefore consider anything containing these characters as an absolute URL, and only prepend the
                  * vocabulary identifier if none of these characters are found.
                  */
-                if (strpos($name, '.') === false && strpos($name, ':') === false) {
+                if (!str_contains($name, '.') && !str_contains($name, ':')) {
                     $name = $vocabularyIdentifier . $name;
                 }
 
@@ -158,10 +153,8 @@ class MicrodataReader implements Reader
      * @param DOMNode  $node  A DOMNode representing an element with the itemprop attribute.
      * @param DOMXPath $xpath A DOMXPath object created from the node's document element.
      * @param string   $url   The URL the document was retrieved from, for relative URL resolution.
-     *
-     * @return Item|string
      */
-    private function getPropertyValue(DOMNode $node, DOMXPath $xpath, string $url)
+    private function getPropertyValue(DOMNode $node, DOMXPath $xpath, string $url) : Item|string
     {
         /**
          * If the element also has an itemscope attribute: the value is the item created by the element.
@@ -194,7 +187,7 @@ class MicrodataReader implements Reader
             if ($attr !== null) {
                 try {
                     return resolve($url, $attr->textContent);
-                } catch (InvalidUriException $e) {
+                } catch (InvalidUriException) {
                     return '';
                 }
             }
@@ -213,7 +206,7 @@ class MicrodataReader implements Reader
             if ($attr !== null) {
                 try {
                     return resolve($url, $attr->textContent);
-                } catch (InvalidUriException $e) {
+                } catch (InvalidUriException) {
                     return '';
                 }
             }
@@ -230,7 +223,7 @@ class MicrodataReader implements Reader
             if ($attr !== null) {
                 try {
                     return resolve($url, $attr->textContent);
-                } catch (InvalidUriException $e) {
+                } catch (InvalidUriException) {
                     return '';
                 }
             }

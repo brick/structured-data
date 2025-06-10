@@ -7,6 +7,7 @@ namespace Brick\StructuredData\Reader;
 use Brick\StructuredData\Item;
 use Brick\StructuredData\Reader;
 
+use Override;
 use stdClass;
 
 use DOMDocument;
@@ -29,12 +30,12 @@ use function Sabre\Uri\resolve;
  *
  * https://json-ld.org/spec/latest/json-ld/
  */
-class JsonLdReader implements Reader
+final class JsonLdReader implements Reader
 {
     /**
      * @var string[]
      */
-    private $iriProperties;
+    private readonly array $iriProperties;
 
     /**
      * JsonLdReader constructor.
@@ -51,9 +52,7 @@ class JsonLdReader implements Reader
         $this->iriProperties = $iriProperties;
     }
 
-    /**
-     * @inheritDoc
-     */
+    #[Override]
     public function read(DOMDocument $document, string $url) : array
     {
         $xpath = new DOMXPath($document);
@@ -65,9 +64,10 @@ class JsonLdReader implements Reader
             return [];
         }
 
-        $items = array_map(function(DOMNode $node) use ($url) {
-            return $this->readJson($node->textContent, $url);
-        }, $nodes);
+        $items = array_map(
+            fn(DOMNode $node) => $this->readJson($node->textContent, $url),
+            $nodes,
+        );
 
         return array_merge(...$items);
     }
@@ -84,7 +84,7 @@ class JsonLdReader implements Reader
      */
     private function readJson(string $json, string $url) : array
     {
-        $data = json_decode($json);
+        $data = json_decode($json, flags: JSON_THROW_ON_ERROR);
 
         if ($data === null) {
             return [];
@@ -101,9 +101,10 @@ class JsonLdReader implements Reader
         }
 
         if (is_array($data)) {
-            $items = array_map(function($item) use ($url) {
-                return is_object($item) ? $this->readItem($item, $url, null) : null;
-            }, $data);
+            $items = array_map(
+                fn($item) => is_object($item) ? $this->readItem($item, $url, null) : null,
+                $data,
+            );
 
             $items = array_filter($items);
             $items = array_values($items);
@@ -134,7 +135,7 @@ class JsonLdReader implements Reader
         if (isset($item->{'@id'}) && is_string($item->{'@id'})) {
             try {
                 $id = resolve($url, $item->{'@id'}); // always relative to the document URL, no support for @base
-            } catch (InvalidUriException $e) {
+            } catch (InvalidUriException) {
                 // ignore
             }
         }
@@ -148,9 +149,10 @@ class JsonLdReader implements Reader
                 $type = $this->resolveTerm($type, $vocabulary);
                 $types = [$type];
             } elseif (is_array($type)) {
-                $types = array_map(function($type) use ($vocabulary) {
-                    return is_string($type) ? $this->resolveTerm($type, $vocabulary) : null;
-                }, $types);
+                $types = array_map(
+                    fn($type) => is_string($type) ? $this->resolveTerm($type, $vocabulary) : null,
+                    $types,
+                );
 
                 $types = array_filter($types);
                 $types = array_values($types);
@@ -230,17 +232,17 @@ class JsonLdReader implements Reader
      * @param string      $name       The property name.
      * @param mixed       $value      The property value. Any JSON type.
      * @param string      $url        The URL the document was retrieved from, for relative URL resolution.
-     * @param string|null $vocabulary The currently vocabulary URL, if any.
+     * @param string|null $vocabulary The current vocabulary URL, if any.
      *
      * @return Item|string|null The value, or NULL if the input value is NULL or an array.
      */
-    private function getPropertyValue(string $name, $value, string $url, ?string $vocabulary)
+    private function getPropertyValue(string $name, mixed $value, string $url, ?string $vocabulary) : Item|string|null
     {
         if (is_string($value)) {
             if (in_array($name, $this->iriProperties, true)) {
                 try {
                     $value = resolve($url, $value);
-                } catch (InvalidUriException $e) {
+                } catch (InvalidUriException) {
                     // ignore
                 }
             }
@@ -274,7 +276,7 @@ class JsonLdReader implements Reader
     {
         try {
             $parts = parse($url);
-        } catch (InvalidUriException $e) {
+        } catch (InvalidUriException) {
             return null;
         }
 

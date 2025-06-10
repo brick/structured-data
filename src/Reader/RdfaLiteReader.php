@@ -11,6 +11,7 @@ use DOMDocument;
 use DOMNode;
 use DOMXPath;
 
+use Override;
 use Sabre\Uri\InvalidUriException;
 use function Sabre\Uri\resolve;
 use function Sabre\Uri\parse;
@@ -23,7 +24,7 @@ use function Sabre\Uri\build;
  *
  * @todo support for the prefix attribute; only predefined prefixes are supported right now
  */
-class RdfaLiteReader implements Reader
+final class RdfaLiteReader implements Reader
 {
     /**
      * The predefined RDFa prefixes.
@@ -84,22 +85,21 @@ class RdfaLiteReader implements Reader
         'xsd'     => 'http://www.w3.org/2001/XMLSchema#',
     ];
 
-    /**
-     * @inheritDoc
-     */
+    #[Override]
     public function read(DOMDocument $document, string $url) : array
     {
         $xpath = new DOMXPath($document);
 
         /**
-         * Top-level item have a typeof attribute and no property attribute.
+         * Top-level item has a typeof attribute and no property attribute.
          */
         $nodes = $xpath->query('//*[@typeof and not(@property)]');
         $nodes = iterator_to_array($nodes);
 
-        return array_map(function(DOMNode $node) use ($xpath, $url) {
-            return $this->nodeToItem($node, $xpath, $url, self::PREDEFINED_PREFIXES, null);
-        }, $nodes);
+        return array_map(
+            fn(DOMNode $node) => $this->nodeToItem($node, $xpath, $url, self::PREDEFINED_PREFIXES, null),
+            $nodes,
+        );
     }
 
     /**
@@ -119,7 +119,7 @@ class RdfaLiteReader implements Reader
         $vocabulary = $this->updateVocabulary($node, $vocabulary);
 
         /**
-         * The resource attribute holds the item identifier, than must be resolved relative to the current URL.
+         * The resource attribute holds the item identifier, that must be resolved relative to the current URL.
          *
          * https://www.w3.org/TR/rdfa-lite/#resource
          */
@@ -150,9 +150,7 @@ class RdfaLiteReader implements Reader
         }, $types);
 
         // Remove empty values
-        $types = array_values(array_filter($types, function(string $type) {
-            return $type !== '';
-        }));
+        $types = array_values(array_filter($types, fn(string $type) => $type !== ''));
 
         $item = new Item($id, ...$types);
 
@@ -245,7 +243,7 @@ class RdfaLiteReader implements Reader
     {
         try {
             $parts = parse($url);
-        } catch (InvalidUriException $e) {
+        } catch (InvalidUriException) {
             return false;
         }
 
@@ -292,7 +290,7 @@ class RdfaLiteReader implements Reader
     {
         try {
             $parts = parse($url);
-        } catch (InvalidUriException $e) {
+        } catch (InvalidUriException) {
             return null;
         }
 
@@ -319,10 +317,8 @@ class RdfaLiteReader implements Reader
      * @param string      $url        The URL the document was retrieved from, for relative URL resolution.
      * @param string[]    $prefixes   The prefixes in use, as a map of prefix to vocabulary URL.
      * @param string|null $vocabulary The URL of the vocabulary in use, if any.
-     *
-     * @return Item|string
      */
-    private function getPropertyValue(DOMNode $node, DOMXPath $xpath, string $url, array $prefixes, ?string $vocabulary)
+    private function getPropertyValue(DOMNode $node, DOMXPath $xpath, string $url, array $prefixes, ?string $vocabulary) : Item|string
     {
         // If the element also has an typeof attribute, create an item from the element
         $attr = $node->attributes->getNamedItem('typeof');
@@ -344,7 +340,7 @@ class RdfaLiteReader implements Reader
         if ($attr !== null) {
             try {
                 return resolve($url, $attr->textContent);
-            } catch (InvalidUriException $e) {
+            } catch (InvalidUriException) {
                 return '';
             }
         }
@@ -355,7 +351,7 @@ class RdfaLiteReader implements Reader
         if ($attr !== null) {
             try {
                 return resolve($url, $attr->textContent);
-            } catch (InvalidUriException $e) {
+            } catch (InvalidUriException) {
                 return '';
             }
         }

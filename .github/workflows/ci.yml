@@ -2,12 +2,33 @@ name: CI
 
 on:
   push:
+    branches: [master]
   pull_request:
 
 env:
-  COVERAGE_PHP_VERSION: "8.3"
+  PSALM_PHP_VERSION: "8.4"
+  COVERAGE_PHP_VERSION: "8.4"
 
 jobs:
+  psalm:
+    name: Psalm
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PSALM_PHP_VERSION }}
+
+      - name: Install composer dependencies
+        uses: ramsey/composer-install@v3
+
+      - name: Run Psalm
+        run: vendor/bin/psalm --no-progress
+
   phpunit:
     name: PHPUnit
     runs-on: ubuntu-latest
@@ -16,17 +37,14 @@ jobs:
       fail-fast: false
       matrix:
         php-version:
-          - "7.2"
-          - "7.3"
-          - "7.4"
-          - "8.0"
           - "8.1"
           - "8.2"
           - "8.3"
+          - "8.4"
         deps:
           - "highest"
         include:
-          - php-version: "7.2"
+          - php-version: "8.1"
             deps: "lowest"
 
     steps:

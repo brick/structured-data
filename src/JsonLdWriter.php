@@ -7,7 +7,7 @@ namespace Brick\StructuredData;
 /**
  * Exports Items to JSON-LD.
  */
-class JsonLdWriter
+final class JsonLdWriter
 {
     /**
      * Exports a list of Items as JSON-LD.
@@ -18,11 +18,12 @@ class JsonLdWriter
      */
     public function write(Item ...$items) : string
     {
-        $items = array_map(function(Item $item) {
-            return $this->convertItem($item);
-        }, $items);
+        $items = array_map(
+            fn(Item $item) => $this->convertItem($item),
+            $items,
+        );
 
-        return json_encode($this->extractIfSingle($items), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        return json_encode($this->extractIfSingle($items), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -62,7 +63,7 @@ class JsonLdWriter
      *
      * @return mixed
      */
-    private function extractIfSingle(array $values)
+    private function extractIfSingle(array $values) : mixed
     {
         if (count($values) === 1) {
             return $values[0];

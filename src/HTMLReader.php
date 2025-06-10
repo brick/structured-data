@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace Brick\StructuredData;
 
-class HTMLReader
+final class HTMLReader
 {
-    /**
-     * @var Reader
-     */
-    private $reader;
+    private readonly Reader $reader;
 
     /**
      * HTMLReader constructor.
