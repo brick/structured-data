@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Brick\StructuredData;
 
-use TypeError;
-
 /**
  * An item, such as a Thing in schema.org's vocabulary.
  */
