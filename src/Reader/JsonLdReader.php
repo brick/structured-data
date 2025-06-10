@@ -230,7 +230,7 @@ final class JsonLdReader implements Reader
      * @param string      $name       The property name.
      * @param mixed       $value      The property value. Any JSON type.
      * @param string      $url        The URL the document was retrieved from, for relative URL resolution.
-     * @param string|null $vocabulary The currently vocabulary URL, if any.
+     * @param string|null $vocabulary The current vocabulary URL, if any.
      *
      * @return Item|string|null The value, or NULL if the input value is NULL or an array.
      */

@@ -57,7 +57,7 @@ final class Item
     /**
      * Returns the list of types this Item implements.
      *
-     * Each type is a represented as a URL, e.g. http://schema.org/Product .
+     * Each type is represented as a URL, e.g. http://schema.org/Product .
      *
      * @return array<string>
      */

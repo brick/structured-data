@@ -92,7 +92,7 @@ final class RdfaLiteReader implements Reader
         $xpath = new DOMXPath($document);
 
         /**
-         * Top-level item have a typeof attribute and no property attribute.
+         * Top-level item has a typeof attribute and no property attribute.
          */
         $nodes = $xpath->query('//*[@typeof and not(@property)]');
         $nodes = iterator_to_array($nodes);
@@ -119,7 +119,7 @@ final class RdfaLiteReader implements Reader
         $vocabulary = $this->updateVocabulary($node, $vocabulary);
 
         /**
-         * The resource attribute holds the item identifier, than must be resolved relative to the current URL.
+         * The resource attribute holds the item identifier, that must be resolved relative to the current URL.
          *
          * https://www.w3.org/TR/rdfa-lite/#resource
          */
