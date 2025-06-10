@@ -12,14 +12,14 @@ final class Item
     /**
      * The global identifier of the item, if any.
      */
-    private ?string $id;
+    private readonly ?string $id;
 
     /**
      * The types this Item implements, as URLs.
      *
      * @var string[]
      */
-    private array $types;
+    private readonly array $types;
 
     /**
      * The properties, as a map of property name to list of values.

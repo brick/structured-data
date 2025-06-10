@@ -16,7 +16,7 @@ final class ReaderChain implements Reader
     /**
      * @var Reader[]
      */
-    private array $readers;
+    private readonly array $readers;
 
     /**
      * ReaderChain constructor.

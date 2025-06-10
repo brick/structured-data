@@ -34,7 +34,7 @@ final class JsonLdReader implements Reader
     /**
      * @var string[]
      */
-    private array $iriProperties;
+    private readonly array $iriProperties;
 
     /**
      * JsonLdReader constructor.
