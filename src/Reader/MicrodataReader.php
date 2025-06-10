@@ -134,7 +134,7 @@ final class MicrodataReader implements Reader
                  * We therefore consider anything containing these characters as an absolute URL, and only prepend the
                  * vocabulary identifier if none of these characters are found.
                  */
-                if (strpos($name, '.') === false && strpos($name, ':') === false) {
+                if (!str_contains($name, '.') && !str_contains($name, ':')) {
                     $name = $vocabularyIdentifier . $name;
                 }
 
