@@ -188,7 +188,7 @@ final class MicrodataReader implements Reader
             if ($attr !== null) {
                 try {
                     return resolve($url, $attr->textContent);
-                } catch (InvalidUriException $e) {
+                } catch (InvalidUriException) {
                     return '';
                 }
             }
@@ -207,7 +207,7 @@ final class MicrodataReader implements Reader
             if ($attr !== null) {
                 try {
                     return resolve($url, $attr->textContent);
-                } catch (InvalidUriException $e) {
+                } catch (InvalidUriException) {
                     return '';
                 }
             }
@@ -224,7 +224,7 @@ final class MicrodataReader implements Reader
             if ($attr !== null) {
                 try {
                     return resolve($url, $attr->textContent);
-                } catch (InvalidUriException $e) {
+                } catch (InvalidUriException) {
                     return '';
                 }
             }

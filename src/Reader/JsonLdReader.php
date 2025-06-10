@@ -133,7 +133,7 @@ final class JsonLdReader implements Reader
         if (isset($item->{'@id'}) && is_string($item->{'@id'})) {
             try {
                 $id = resolve($url, $item->{'@id'}); // always relative to the document URL, no support for @base
-            } catch (InvalidUriException $e) {
+            } catch (InvalidUriException) {
                 // ignore
             }
         }
@@ -239,7 +239,7 @@ final class JsonLdReader implements Reader
             if (in_array($name, $this->iriProperties, true)) {
                 try {
                     $value = resolve($url, $value);
-                } catch (InvalidUriException $e) {
+                } catch (InvalidUriException) {
                     // ignore
                 }
             }
@@ -273,7 +273,7 @@ final class JsonLdReader implements Reader
     {
         try {
             $parts = parse($url);
-        } catch (InvalidUriException $e) {
+        } catch (InvalidUriException) {
             return null;
         }
 

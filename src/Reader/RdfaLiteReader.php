@@ -244,7 +244,7 @@ final class RdfaLiteReader implements Reader
     {
         try {
             $parts = parse($url);
-        } catch (InvalidUriException $e) {
+        } catch (InvalidUriException) {
             return false;
         }
 
@@ -291,7 +291,7 @@ final class RdfaLiteReader implements Reader
     {
         try {
             $parts = parse($url);
-        } catch (InvalidUriException $e) {
+        } catch (InvalidUriException) {
             return null;
         }
 
@@ -341,7 +341,7 @@ final class RdfaLiteReader implements Reader
         if ($attr !== null) {
             try {
                 return resolve($url, $attr->textContent);
-            } catch (InvalidUriException $e) {
+            } catch (InvalidUriException) {
                 return '';
             }
         }
@@ -352,7 +352,7 @@ final class RdfaLiteReader implements Reader
         if ($attr !== null) {
             try {
                 return resolve($url, $attr->textContent);
-            } catch (InvalidUriException $e) {
+            } catch (InvalidUriException) {
                 return '';
             }
         }
