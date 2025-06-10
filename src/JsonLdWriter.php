@@ -22,7 +22,7 @@ final class JsonLdWriter
             return $this->convertItem($item);
         }, $items);
 
-        return json_encode($this->extractIfSingle($items), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        return json_encode($this->extractIfSingle($items), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
     }
 
     /**

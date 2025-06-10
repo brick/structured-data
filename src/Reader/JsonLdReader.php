@@ -83,7 +83,7 @@ final class JsonLdReader implements Reader
      */
     private function readJson(string $json, string $url) : array
     {
-        $data = json_decode($json);
+        $data = json_decode($json, flags: JSON_THROW_ON_ERROR);
 
         if ($data === null) {
             return [];
