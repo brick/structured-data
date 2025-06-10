@@ -18,9 +18,10 @@ final class JsonLdWriter
      */
     public function write(Item ...$items) : string
     {
-        $items = array_map(function(Item $item) {
-            return $this->convertItem($item);
-        }, $items);
+        $items = array_map(
+            fn(Item $item) => $this->convertItem($item),
+            $items,
+        );
 
         return json_encode($this->extractIfSingle($items), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
     }

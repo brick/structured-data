@@ -37,9 +37,10 @@ final class MicrodataReader implements Reader
         $nodes = $xpath->query('//*[@itemscope and not(@itemprop)]');
         $nodes = iterator_to_array($nodes);
 
-        return array_map(function(DOMNode $node) use ($xpath, $url) {
-            return $this->nodeToItem($node, $xpath, $url);
-        }, $nodes);
+        return array_map(
+            fn(DOMNode $node) => $this->nodeToItem($node, $xpath, $url),
+            $nodes,
+        );
     }
 
     /**
@@ -83,9 +84,7 @@ final class MicrodataReader implements Reader
              * If the itemtype attribute is missing or parsing it in this way finds no tokens, the item is said to have
              * no item types.
              */
-            $types = array_values(array_filter($types, function(string $type) {
-                return $type !== '';
-            }));
+            $types = array_values(array_filter($types, fn(string $type) => $type !== ''));
         } else {
             $types = [];
         }

@@ -18,13 +18,8 @@
     <MixedArrayAccess>
       <code><![CDATA[$name[0]]]></code>
     </MixedArrayAccess>
-    <NoValue>
-      <code><![CDATA[$type]]></code>
-    </NoValue>
     <PossiblyInvalidArgument>
-      <code><![CDATA[function(DOMNode $node) use ($url) {
-            return $this->readJson($node->textContent, $url);
-        }]]></code>
+      <code><![CDATA[fn(DOMNode $node) => $this->readJson($node->textContent, $url)]]></code>
     </PossiblyInvalidArgument>
     <RawObjectIteration>
       <code><![CDATA[$item]]></code>
@@ -50,6 +45,7 @@
         }]]></code>
     </InvalidArgument>
     <PossiblyInvalidArgument>
+      <code><![CDATA[fn(DOMNode $node) => $this->nodeToItem($node, $xpath, $url)]]></code>
       <code><![CDATA[function(DOMNode $itemprop) use ($node, $xpath) {
             for (;;) {
                 $itemprop = $itemprop->parentNode;
@@ -62,9 +58,6 @@
                     return false;
                 }
             }
-        }]]></code>
-      <code><![CDATA[function(DOMNode $node) use ($xpath, $url) {
-            return $this->nodeToItem($node, $xpath, $url);
         }]]></code>
     </PossiblyInvalidArgument>
     <PossiblyNullArgument>
@@ -102,6 +95,7 @@
         }]]></code>
     </InvalidArgument>
     <PossiblyInvalidArgument>
+      <code><![CDATA[fn(DOMNode $node) => $this->nodeToItem($node, $xpath, $url, self::PREDEFINED_PREFIXES, null)]]></code>
       <code><![CDATA[function(DOMNode $itemprop) use ($node, $xpath) {
             for (;;) {
                 $itemprop = $itemprop->parentNode;
@@ -117,9 +111,6 @@
 
             // Unreachable, but makes static analysis happy
             return false;
-        }]]></code>
-      <code><![CDATA[function(DOMNode $node) use ($xpath, $url) {
-            return $this->nodeToItem($node, $xpath, $url, self::PREDEFINED_PREFIXES, null);
         }]]></code>
     </PossiblyInvalidArgument>
     <PossiblyNullArgument>

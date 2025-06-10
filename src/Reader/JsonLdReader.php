@@ -64,9 +64,10 @@ final class JsonLdReader implements Reader
             return [];
         }
 
-        $items = array_map(function(DOMNode $node) use ($url) {
-            return $this->readJson($node->textContent, $url);
-        }, $nodes);
+        $items = array_map(
+            fn(DOMNode $node) => $this->readJson($node->textContent, $url),
+            $nodes,
+        );
 
         return array_merge(...$items);
     }
@@ -100,9 +101,10 @@ final class JsonLdReader implements Reader
         }
 
         if (is_array($data)) {
-            $items = array_map(function($item) use ($url) {
-                return is_object($item) ? $this->readItem($item, $url, null) : null;
-            }, $data);
+            $items = array_map(
+                fn($item) => is_object($item) ? $this->readItem($item, $url, null) : null,
+                $data,
+            );
 
             $items = array_filter($items);
             $items = array_values($items);
@@ -147,9 +149,10 @@ final class JsonLdReader implements Reader
                 $type = $this->resolveTerm($type, $vocabulary);
                 $types = [$type];
             } elseif (is_array($type)) {
-                $types = array_map(function($type) use ($vocabulary) {
-                    return is_string($type) ? $this->resolveTerm($type, $vocabulary) : null;
-                }, $types);
+                $types = array_map(
+                    fn($type) => is_string($type) ? $this->resolveTerm($type, $vocabulary) : null,
+                    $types,
+                );
 
                 $types = array_filter($types);
                 $types = array_values($types);

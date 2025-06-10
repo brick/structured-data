@@ -96,9 +96,10 @@ final class RdfaLiteReader implements Reader
         $nodes = $xpath->query('//*[@typeof and not(@property)]');
         $nodes = iterator_to_array($nodes);
 
-        return array_map(function(DOMNode $node) use ($xpath, $url) {
-            return $this->nodeToItem($node, $xpath, $url, self::PREDEFINED_PREFIXES, null);
-        }, $nodes);
+        return array_map(
+            fn(DOMNode $node) => $this->nodeToItem($node, $xpath, $url, self::PREDEFINED_PREFIXES, null),
+            $nodes,
+        );
     }
 
     /**
@@ -149,9 +150,7 @@ final class RdfaLiteReader implements Reader
         }, $types);
 
         // Remove empty values
-        $types = array_values(array_filter($types, function(string $type) {
-            return $type !== '';
-        }));
+        $types = array_values(array_filter($types, fn(string $type) => $type !== ''));
 
         $item = new Item($id, ...$types);
 
