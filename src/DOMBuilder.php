@@ -6,16 +6,15 @@ namespace Brick\StructuredData;
 
 use DOMDocument;
 
+use const LIBXML_NOERROR;
+use const LIBXML_NOWARNING;
+
 final class DOMBuilder
 {
     /**
      * Builds a DOMDocument from an HTML string.
-     *
-     * @param string $html
-     *
-     * @return DOMDocument
      */
-    public static function fromHTML(string $html) : DOMDocument
+    public static function fromHTML(string $html): DOMDocument
     {
         $document = new DOMDocument();
         $document->loadHTML($html, LIBXML_NOWARNING | LIBXML_NOERROR);
@@ -25,12 +24,8 @@ final class DOMBuilder
 
     /**
      * Builds a DOMDocument from an HTML file.
-     *
-     * @param string $file
-     *
-     * @return DOMDocument
      */
-    public static function fromHTMLFile(string $file) : DOMDocument
+    public static function fromHTMLFile(string $file): DOMDocument
     {
         $document = new DOMDocument();
         $document->loadHTMLFile($file, LIBXML_NOWARNING | LIBXML_NOERROR);

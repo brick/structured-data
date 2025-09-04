@@ -6,14 +6,25 @@ namespace Brick\StructuredData\Reader;
 
 use Brick\StructuredData\Item;
 use Brick\StructuredData\Reader;
-
 use DOMDocument;
 use DOMNode;
 use DOMXPath;
-
 use Override;
 use Sabre\Uri\InvalidUriException;
+
+use function array_filter;
+use function array_map;
+use function array_values;
+use function explode;
+use function in_array;
+use function iterator_to_array;
+use function preg_replace;
 use function Sabre\Uri\resolve;
+use function str_contains;
+use function strpos;
+use function strrpos;
+use function substr;
+use function trim;
 
 /**
  * Reads Microdata embedded into a HTML document.
@@ -25,7 +36,7 @@ use function Sabre\Uri\resolve;
 final class MicrodataReader implements Reader
 {
     #[Override]
-    public function read(DOMDocument $document, string $url) : array
+    public function read(DOMDocument $document, string $url): array
     {
         $xpath = new DOMXPath($document);
 
@@ -38,7 +49,7 @@ final class MicrodataReader implements Reader
         $nodes = iterator_to_array($nodes);
 
         return array_map(
-            fn(DOMNode $node) => $this->nodeToItem($node, $xpath, $url),
+            fn (DOMNode $node) => $this->nodeToItem($node, $xpath, $url),
             $nodes,
         );
     }
@@ -49,10 +60,8 @@ final class MicrodataReader implements Reader
      * @param DOMNode  $node  A DOMNode representing an element with the itemscope attribute.
      * @param DOMXPath $xpath A DOMXPath object created from the node's document element.
      * @param string   $url   The URL the document was retrieved from, for relative URL resolution.
-     *
-     * @return Item
      */
-    private function nodeToItem(DOMNode $node, DOMXPath $xpath, string $url) : Item
+    private function nodeToItem(DOMNode $node, DOMXPath $xpath, string $url): Item
     {
         $itemid = $node->attributes->getNamedItem('itemid');
 
@@ -84,7 +93,7 @@ final class MicrodataReader implements Reader
              * If the itemtype attribute is missing or parsing it in this way finds no tokens, the item is said to have
              * no item types.
              */
-            $types = array_values(array_filter($types, fn(string $type) => $type !== ''));
+            $types = array_values(array_filter($types, fn (string $type) => $type !== ''));
         } else {
             $types = [];
         }
@@ -97,8 +106,8 @@ final class MicrodataReader implements Reader
 
         // Exclude properties that are inside a nested item; XPath does not seem to provide a way to do this.
         // See: https://stackoverflow.com/q/26365495/759866
-        $itemprops = array_filter($itemprops, function(DOMNode $itemprop) use ($node, $xpath) {
-            for (;;) {
+        $itemprops = array_filter($itemprops, function (DOMNode $itemprop) use ($node, $xpath) {
+            for (; ;) {
                 $itemprop = $itemprop->parentNode;
 
                 if ($itemprop->isSameNode($node)) {
@@ -134,7 +143,7 @@ final class MicrodataReader implements Reader
                  * We therefore consider anything containing these characters as an absolute URL, and only prepend the
                  * vocabulary identifier if none of these characters are found.
                  */
-                if (!str_contains($name, '.') && !str_contains($name, ':')) {
+                if (! str_contains($name, '.') && ! str_contains($name, ':')) {
                     $name = $vocabularyIdentifier . $name;
                 }
 
@@ -148,13 +157,13 @@ final class MicrodataReader implements Reader
     }
 
     /**
-     * https://www.w3.org/TR/microdata/#values
+     * @see https://www.w3.org/TR/microdata/#values
      *
      * @param DOMNode  $node  A DOMNode representing an element with the itemprop attribute.
      * @param DOMXPath $xpath A DOMXPath object created from the node's document element.
      * @param string   $url   The URL the document was retrieved from, for relative URL resolution.
      */
-    private function getPropertyValue(DOMNode $node, DOMXPath $xpath, string $url) : Item|string
+    private function getPropertyValue(DOMNode $node, DOMXPath $xpath, string $url): Item|string
     {
         /**
          * If the element also has an itemscope attribute: the value is the item created by the element.
@@ -268,10 +277,8 @@ final class MicrodataReader implements Reader
      * https://www.w3.org/TR/microdata/#dfn-vocabulary-identifier
      *
      * @param string[] $types The types, as valid absolute URLs.
-     *
-     * @return string
      */
-    private function getVocabularyIdentifier(array $types) : string
+    private function getVocabularyIdentifier(array $types): string
     {
         if (! $types) {
             return '';

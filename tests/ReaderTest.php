@@ -10,14 +10,18 @@ use Brick\StructuredData\Reader\JsonLdReader;
 use Brick\StructuredData\Reader\MicrodataReader;
 use Brick\StructuredData\Reader\RdfaLiteReader;
 use Brick\StructuredData\Reader\ReaderChain;
-
 use PHPUnit\Framework\TestCase;
+
+use function file_get_contents;
+use function glob;
+use function preg_replace;
+use function rtrim;
 
 class ReaderTest extends TestCase
 {
     /**
      * Tests extraction of structured data from HTML, and export to JSON-LD.
-     * All URLs are resolved relative to https://example.com/path/to/page
+     * All URLs are resolved relative to https://example.com/path/to/page.
      *
      * A list of schema.org IRI properties (only those relevant to the tests) is provided to JsonLdReader.
      *
@@ -25,19 +29,17 @@ class ReaderTest extends TestCase
      *
      * @param string $htmlFile     The HTML file containing the structured data.
      * @param string $expectedJson The expected JSON-LD output.
-     *
-     * @return void
      */
-    public function testHtmlToJson(string $htmlFile, string $expectedJson) : void
+    public function testHtmlToJson(string $htmlFile, string $expectedJson): void
     {
         $iriProperties = [
-            'http://schema.org/image'
+            'http://schema.org/image',
         ];
 
         $reader = new ReaderChain(
             new MicrodataReader(),
             new RdfaLiteReader(),
-            new JsonLdReader($iriProperties)
+            new JsonLdReader($iriProperties),
         );
 
         $htmlReader = new HTMLReader($reader);
@@ -49,10 +51,7 @@ class ReaderTest extends TestCase
         self::assertSame($expectedJson, $actualJson);
     }
 
-    /**
-     * @return iterable
-     */
-    public function providerHtmlToJson() : iterable
+    public function providerHtmlToJson(): iterable
     {
         $htmlFiles = glob(__DIR__ . '/data/*-in.html');
 

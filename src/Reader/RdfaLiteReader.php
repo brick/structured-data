@@ -6,16 +6,23 @@ namespace Brick\StructuredData\Reader;
 
 use Brick\StructuredData\Item;
 use Brick\StructuredData\Reader;
-
 use DOMDocument;
 use DOMNode;
 use DOMXPath;
-
 use Override;
 use Sabre\Uri\InvalidUriException;
-use function Sabre\Uri\resolve;
-use function Sabre\Uri\parse;
+
+use function array_filter;
+use function array_map;
+use function array_values;
+use function count;
+use function explode;
+use function iterator_to_array;
+use function preg_replace;
 use function Sabre\Uri\build;
+use function Sabre\Uri\parse;
+use function Sabre\Uri\resolve;
+use function trim;
 
 /**
  * Reads RDFa Lite embedded into a HTML document.
@@ -32,61 +39,61 @@ final class RdfaLiteReader implements Reader
      * https://www.w3.org/2011/rdfa-context/rdfa-1.1
      */
     private const PREDEFINED_PREFIXES = [
-        'as'      => 'https://www.w3.org/ns/activitystreams#',
-        'csvw'    => 'http://www.w3.org/ns/csvw#',
-        'cat'     => 'http://www.w3.org/ns/dcat#',
-        'cc'      => 'http://creativecommons.org/ns#',
-        'cnt'     => 'http://www.w3.org/2008/content#',
-        'ctag'    => 'http://commontag.org/ns#',
-        'dc'      => 'http://purl.org/dc/terms/',
-        'dc11'    => 'http://purl.org/dc/elements/1.1/',
-        'dcat'    => 'http://www.w3.org/ns/dcat#',
+        'as' => 'https://www.w3.org/ns/activitystreams#',
+        'csvw' => 'http://www.w3.org/ns/csvw#',
+        'cat' => 'http://www.w3.org/ns/dcat#',
+        'cc' => 'http://creativecommons.org/ns#',
+        'cnt' => 'http://www.w3.org/2008/content#',
+        'ctag' => 'http://commontag.org/ns#',
+        'dc' => 'http://purl.org/dc/terms/',
+        'dc11' => 'http://purl.org/dc/elements/1.1/',
+        'dcat' => 'http://www.w3.org/ns/dcat#',
         'dcterms' => 'http://purl.org/dc/terms/',
-        'dqv'     => 'http://www.w3.org/ns/dqv#',
-        'duv'     => 'https://www.w3.org/TR/vocab-duv#',
-        'earl'    => 'http://www.w3.org/ns/earl#',
-        'foaf'    => 'http://xmlns.com/foaf/0.1/',
-        'gldp'    => 'http://www.w3.org/ns/people#',
-        'gr'      => 'http://purl.org/goodrelations/v1#',
-        'grddl'   => 'http://www.w3.org/2003/g/data-view#',
-        'ht'      => 'http://www.w3.org/2006/http#',
-        'ical'    => 'http://www.w3.org/2002/12/cal/icaltzd#',
-        'ldp'     => 'http://www.w3.org/ns/ldp#',
-        'ma'      => 'http://www.w3.org/ns/ma-ont#',
-        'oa'      => 'http://www.w3.org/ns/oa#',
-        'odrl'    => 'http://www.w3.org/ns/odrl/2/',
-        'og'      => 'http://ogp.me/ns#',
-        'org'     => 'http://www.w3.org/ns/org#',
-        'owl'     => 'http://www.w3.org/2002/07/owl#',
-        'prov'    => 'http://www.w3.org/ns/prov#',
-        'ptr'     => 'http://www.w3.org/2009/pointers#',
-        'qb'      => 'http://purl.org/linked-data/cube#',
-        'rev'     => 'http://purl.org/stuff/rev#',
-        'rdf'     => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-        'rdfa'    => 'http://www.w3.org/ns/rdfa#',
-        'rdfs'    => 'http://www.w3.org/2000/01/rdf-schema#',
-        'rif'     => 'http://www.w3.org/2007/rif#',
-        'rr'      => 'http://www.w3.org/ns/r2rml#',
-        'schema'  => 'http://schema.org/',
-        'sd'      => 'http://www.w3.org/ns/sparql-service-description#',
-        'sioc'    => 'http://rdfs.org/sioc/ns#',
-        'skos'    => 'http://www.w3.org/2004/02/skos/core#',
-        'skosxl'  => 'http://www.w3.org/2008/05/skos-xl#',
-        'ssn'     => 'http://www.w3.org/ns/ssn/',
-        'sosa'    => 'http://www.w3.org/ns/sosa/',
-        'time'    => 'http://www.w3.org/2006/time#',
-        'v'       => 'http://rdf.data-vocabulary.org/#',
-        'vcard'   => 'http://www.w3.org/2006/vcard/ns#',
-        'void'    => 'http://rdfs.org/ns/void#',
-        'wdr'     => 'http://www.w3.org/2007/05/powder#',
-        'wdrs'    => 'http://www.w3.org/2007/05/powder-s#',
-        'xhv'     => 'http://www.w3.org/1999/xhtml/vocab#',
-        'xml'     => 'http://www.w3.org/XML/1998/namespace',
-        'xsd'     => 'http://www.w3.org/2001/XMLSchema#',
+        'dqv' => 'http://www.w3.org/ns/dqv#',
+        'duv' => 'https://www.w3.org/TR/vocab-duv#',
+        'earl' => 'http://www.w3.org/ns/earl#',
+        'foaf' => 'http://xmlns.com/foaf/0.1/',
+        'gldp' => 'http://www.w3.org/ns/people#',
+        'gr' => 'http://purl.org/goodrelations/v1#',
+        'grddl' => 'http://www.w3.org/2003/g/data-view#',
+        'ht' => 'http://www.w3.org/2006/http#',
+        'ical' => 'http://www.w3.org/2002/12/cal/icaltzd#',
+        'ldp' => 'http://www.w3.org/ns/ldp#',
+        'ma' => 'http://www.w3.org/ns/ma-ont#',
+        'oa' => 'http://www.w3.org/ns/oa#',
+        'odrl' => 'http://www.w3.org/ns/odrl/2/',
+        'og' => 'http://ogp.me/ns#',
+        'org' => 'http://www.w3.org/ns/org#',
+        'owl' => 'http://www.w3.org/2002/07/owl#',
+        'prov' => 'http://www.w3.org/ns/prov#',
+        'ptr' => 'http://www.w3.org/2009/pointers#',
+        'qb' => 'http://purl.org/linked-data/cube#',
+        'rev' => 'http://purl.org/stuff/rev#',
+        'rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+        'rdfa' => 'http://www.w3.org/ns/rdfa#',
+        'rdfs' => 'http://www.w3.org/2000/01/rdf-schema#',
+        'rif' => 'http://www.w3.org/2007/rif#',
+        'rr' => 'http://www.w3.org/ns/r2rml#',
+        'schema' => 'http://schema.org/',
+        'sd' => 'http://www.w3.org/ns/sparql-service-description#',
+        'sioc' => 'http://rdfs.org/sioc/ns#',
+        'skos' => 'http://www.w3.org/2004/02/skos/core#',
+        'skosxl' => 'http://www.w3.org/2008/05/skos-xl#',
+        'ssn' => 'http://www.w3.org/ns/ssn/',
+        'sosa' => 'http://www.w3.org/ns/sosa/',
+        'time' => 'http://www.w3.org/2006/time#',
+        'v' => 'http://rdf.data-vocabulary.org/#',
+        'vcard' => 'http://www.w3.org/2006/vcard/ns#',
+        'void' => 'http://rdfs.org/ns/void#',
+        'wdr' => 'http://www.w3.org/2007/05/powder#',
+        'wdrs' => 'http://www.w3.org/2007/05/powder-s#',
+        'xhv' => 'http://www.w3.org/1999/xhtml/vocab#',
+        'xml' => 'http://www.w3.org/XML/1998/namespace',
+        'xsd' => 'http://www.w3.org/2001/XMLSchema#',
     ];
 
     #[Override]
-    public function read(DOMDocument $document, string $url) : array
+    public function read(DOMDocument $document, string $url): array
     {
         $xpath = new DOMXPath($document);
 
@@ -97,7 +104,7 @@ final class RdfaLiteReader implements Reader
         $nodes = iterator_to_array($nodes);
 
         return array_map(
-            fn(DOMNode $node) => $this->nodeToItem($node, $xpath, $url, self::PREDEFINED_PREFIXES, null),
+            fn (DOMNode $node) => $this->nodeToItem($node, $xpath, $url, self::PREDEFINED_PREFIXES, null),
             $nodes,
         );
     }
@@ -111,10 +118,8 @@ final class RdfaLiteReader implements Reader
      * @param string[]    $prefixes   The prefixes in use, as a map of prefix to vocabulary URL.
      * @param string|null $vocabulary The URL of the vocabulary in use, if any.
      *                                This is the content of the vocab attribute of the closest item ancestor.
-     *
-     * @return Item
      */
-    private function nodeToItem(DOMNode $node, DOMXPath $xpath, string $url, array $prefixes, ?string $vocabulary) : Item
+    private function nodeToItem(DOMNode $node, DOMXPath $xpath, string $url, array $prefixes, ?string $vocabulary): Item
     {
         $vocabulary = $this->updateVocabulary($node, $vocabulary);
 
@@ -137,7 +142,7 @@ final class RdfaLiteReader implements Reader
         $types = explode(' ', $typeof->textContent);
 
         // Resolve types, replace invalid ones with empty strings; we'll filter them out in the next step
-        $types = array_map(function(string $type) use ($prefixes, $vocabulary) {
+        $types = array_map(function (string $type) use ($prefixes, $vocabulary) {
             if ($type !== '') {
                 $type = $this->resolveTerm($type, $prefixes, $vocabulary);
 
@@ -150,7 +155,7 @@ final class RdfaLiteReader implements Reader
         }, $types);
 
         // Remove empty values
-        $types = array_values(array_filter($types, fn(string $type) => $type !== ''));
+        $types = array_values(array_filter($types, fn (string $type) => $type !== ''));
 
         $item = new Item($id, ...$types);
 
@@ -160,8 +165,8 @@ final class RdfaLiteReader implements Reader
 
         // Exclude properties that are inside a nested item; XPath does not seem to provide a way to do this.
         // See: https://stackoverflow.com/q/26365495/759866
-        $properties = array_filter($properties, function(DOMNode $itemprop) use ($node, $xpath) {
-            for (;;) {
+        $properties = array_filter($properties, function (DOMNode $itemprop) use ($node, $xpath) {
+            for (; ;) {
                 $itemprop = $itemprop->parentNode;
 
                 if ($itemprop->isSameNode($node)) {
@@ -209,7 +214,7 @@ final class RdfaLiteReader implements Reader
      *
      * @return string|null An absolute URL, or null if the term cannot be resolved.
      */
-    private function resolveTerm(string $term, array $prefixes, ?string $vocabulary) : ?string
+    private function resolveTerm(string $term, array $prefixes, ?string $vocabulary): ?string
     {
         if ($this->isValidAbsoluteURL($term)) {
             return $term;
@@ -234,12 +239,7 @@ final class RdfaLiteReader implements Reader
         return $vocabulary . $term;
     }
 
-    /**
-     * @param string $url
-     *
-     * @return bool
-     */
-    private function isValidAbsoluteURL(string $url) : bool
+    private function isValidAbsoluteURL(string $url): bool
     {
         try {
             $parts = parse($url);
@@ -266,7 +266,7 @@ final class RdfaLiteReader implements Reader
      *
      * @return string|null The updated vocabulary URL, if any.
      */
-    private function updateVocabulary(DOMNode $node, ?string $vocabulary) : ?string
+    private function updateVocabulary(DOMNode $node, ?string $vocabulary): ?string
     {
         $vocab = $node->attributes->getNamedItem('vocab');
 
@@ -282,11 +282,9 @@ final class RdfaLiteReader implements Reader
      *
      * Example: http://schema.org would return http://schema.org/
      *
-     * @param string $url
-     *
      * @return string|null An absolute URL, or null if the input is not valid.
      */
-    private function checkVocabularyUrl(string $url) : ?string
+    private function checkVocabularyUrl(string $url): ?string
     {
         try {
             $parts = parse($url);
@@ -310,7 +308,7 @@ final class RdfaLiteReader implements Reader
     }
 
     /**
-     * https://www.w3.org/TR/microdata/#values
+     * @see https://www.w3.org/TR/microdata/#values
      *
      * @param DOMNode     $node       A DOMNode representing an element with the property attribute.
      * @param DOMXPath    $xpath      A DOMXPath object created from the node's document element.
@@ -318,7 +316,7 @@ final class RdfaLiteReader implements Reader
      * @param string[]    $prefixes   The prefixes in use, as a map of prefix to vocabulary URL.
      * @param string|null $vocabulary The URL of the vocabulary in use, if any.
      */
-    private function getPropertyValue(DOMNode $node, DOMXPath $xpath, string $url, array $prefixes, ?string $vocabulary) : Item|string
+    private function getPropertyValue(DOMNode $node, DOMXPath $xpath, string $url, array $prefixes, ?string $vocabulary): Item|string
     {
         // If the element also has an typeof attribute, create an item from the element
         $attr = $node->attributes->getNamedItem('typeof');

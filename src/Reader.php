@@ -20,5 +20,5 @@ interface Reader
      *
      * @return Item[] The top-level items.
      */
-    public function read(DOMDocument $document, string $url) : array;
+    public function read(DOMDocument $document, string $url): array;
 }

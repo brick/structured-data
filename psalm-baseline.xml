@@ -19,7 +19,7 @@
       <code><![CDATA[$name[0]]]></code>
     </MixedArrayAccess>
     <PossiblyInvalidArgument>
-      <code><![CDATA[fn(DOMNode $node) => $this->readJson($node->textContent, $url)]]></code>
+      <code><![CDATA[fn (DOMNode $node) => $this->readJson($node->textContent, $url)]]></code>
     </PossiblyInvalidArgument>
     <RawObjectIteration>
       <code><![CDATA[$item]]></code>
@@ -30,8 +30,8 @@
   </file>
   <file src="src/Reader/MicrodataReader.php">
     <InvalidArgument>
-      <code><![CDATA[function(DOMNode $itemprop) use ($node, $xpath) {
-            for (;;) {
+      <code><![CDATA[function (DOMNode $itemprop) use ($node, $xpath) {
+            for (; ;) {
                 $itemprop = $itemprop->parentNode;
 
                 if ($itemprop->isSameNode($node)) {
@@ -45,9 +45,9 @@
         }]]></code>
     </InvalidArgument>
     <PossiblyInvalidArgument>
-      <code><![CDATA[fn(DOMNode $node) => $this->nodeToItem($node, $xpath, $url)]]></code>
-      <code><![CDATA[function(DOMNode $itemprop) use ($node, $xpath) {
-            for (;;) {
+      <code><![CDATA[fn (DOMNode $node) => $this->nodeToItem($node, $xpath, $url)]]></code>
+      <code><![CDATA[function (DOMNode $itemprop) use ($node, $xpath) {
+            for (; ;) {
                 $itemprop = $itemprop->parentNode;
 
                 if ($itemprop->isSameNode($node)) {
@@ -77,8 +77,8 @@
   </file>
   <file src="src/Reader/RdfaLiteReader.php">
     <InvalidArgument>
-      <code><![CDATA[function(DOMNode $itemprop) use ($node, $xpath) {
-            for (;;) {
+      <code><![CDATA[function (DOMNode $itemprop) use ($node, $xpath) {
+            for (; ;) {
                 $itemprop = $itemprop->parentNode;
 
                 if ($itemprop->isSameNode($node)) {
@@ -95,9 +95,9 @@
         }]]></code>
     </InvalidArgument>
     <PossiblyInvalidArgument>
-      <code><![CDATA[fn(DOMNode $node) => $this->nodeToItem($node, $xpath, $url, self::PREDEFINED_PREFIXES, null)]]></code>
-      <code><![CDATA[function(DOMNode $itemprop) use ($node, $xpath) {
-            for (;;) {
+      <code><![CDATA[fn (DOMNode $node) => $this->nodeToItem($node, $xpath, $url, self::PREDEFINED_PREFIXES, null)]]></code>
+      <code><![CDATA[function (DOMNode $itemprop) use ($node, $xpath) {
+            for (; ;) {
                 $itemprop = $itemprop->parentNode;
 
                 if ($itemprop->isSameNode($node)) {

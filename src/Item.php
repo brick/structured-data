@@ -36,16 +36,14 @@ final class Item
      */
     public function __construct(?string $id, string ...$types)
     {
-        $this->id    = $id;
+        $this->id = $id;
         $this->types = $types;
     }
 
     /**
      * Returns the global identifier of the item, if any.
-     *
-     * @return string|null
      */
-    public function getId() : ?string
+    public function getId(): ?string
     {
         return $this->id;
     }
@@ -57,7 +55,7 @@ final class Item
      *
      * @return string[]
      */
-    public function getTypes() : array
+    public function getTypes(): array
     {
         return $this->types;
     }
@@ -70,7 +68,7 @@ final class Item
      *
      * @return array<string, array<Item|string>>
      */
-    public function getProperties() : array
+    public function getProperties(): array
     {
         return $this->properties;
     }
@@ -81,22 +79,14 @@ final class Item
      * The result is a list of Item instances or plain strings.
      * If the property does not exist, an empty array is returned.
      *
-     * @param string $name
-     *
      * @return array<Item|string>
      */
-    public function getProperty(string $name) : array
+    public function getProperty(string $name): array
     {
         return $this->properties[$name] ?? [];
     }
 
-    /**
-     * @param string      $name
-     * @param Item|string $value
-     *
-     * @return void
-     */
-    public function addProperty(string $name, Item|string $value) : void
+    public function addProperty(string $name, Item|string $value): void
     {
         $this->properties[$name][] = $value;
     }

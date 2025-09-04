@@ -6,18 +6,31 @@ namespace Brick\StructuredData\Reader;
 
 use Brick\StructuredData\Item;
 use Brick\StructuredData\Reader;
-
-use Override;
-use stdClass;
-
 use DOMDocument;
 use DOMNode;
 use DOMXPath;
-
+use Override;
 use Sabre\Uri\InvalidUriException;
+use stdClass;
+
+use function array_filter;
+use function array_map;
+use function array_merge;
+use function array_values;
+use function array_walk_recursive;
+use function in_array;
+use function is_array;
+use function is_bool;
+use function is_object;
+use function is_scalar;
+use function is_string;
+use function iterator_to_array;
+use function json_decode;
 use function Sabre\Uri\build;
 use function Sabre\Uri\parse;
 use function Sabre\Uri\resolve;
+
+use const JSON_THROW_ON_ERROR;
 
 /**
  * Reads JSON-LD documents embedded into a HTML document.
@@ -53,7 +66,7 @@ final class JsonLdReader implements Reader
     }
 
     #[Override]
-    public function read(DOMDocument $document, string $url) : array
+    public function read(DOMDocument $document, string $url): array
     {
         $xpath = new DOMXPath($document);
 
@@ -65,7 +78,7 @@ final class JsonLdReader implements Reader
         }
 
         $items = array_map(
-            fn(DOMNode $node) => $this->readJson($node->textContent, $url),
+            fn (DOMNode $node) => $this->readJson($node->textContent, $url),
             $nodes,
         );
 
@@ -82,7 +95,7 @@ final class JsonLdReader implements Reader
      *
      * @return Item[]
      */
-    private function readJson(string $json, string $url) : array
+    private function readJson(string $json, string $url): array
     {
         $data = json_decode($json, flags: JSON_THROW_ON_ERROR);
 
@@ -102,7 +115,7 @@ final class JsonLdReader implements Reader
 
         if (is_array($data)) {
             $items = array_map(
-                fn($item) => is_object($item) ? $this->readItem($item, $url, null) : null,
+                fn ($item) => is_object($item) ? $this->readItem($item, $url, null) : null,
                 $data,
             );
 
@@ -121,10 +134,8 @@ final class JsonLdReader implements Reader
      * @param stdClass    $item       A decoded JSON object representing an item, or null if invalid.
      * @param string      $url        The URL the document was retrieved from, for relative URL resolution.
      * @param string|null $vocabulary The currently vocabulary URL, if any.
-     *
-     * @return Item
      */
-    private function readItem(stdClass $item, string $url, ?string $vocabulary) : Item
+    private function readItem(stdClass $item, string $url, ?string $vocabulary): Item
     {
         if (isset($item->{'@context'}) && is_string($item->{'@context'})) {
             $vocabulary = $this->checkVocabularyUrl($item->{'@context'}); // ugh
@@ -150,7 +161,7 @@ final class JsonLdReader implements Reader
                 $types = [$type];
             } elseif (is_array($type)) {
                 $types = array_map(
-                    fn($type) => is_string($type) ? $this->resolveTerm($type, $vocabulary) : null,
+                    fn ($type) => is_string($type) ? $this->resolveTerm($type, $vocabulary) : null,
                     $types,
                 );
 
@@ -197,29 +208,19 @@ final class JsonLdReader implements Reader
      * Flattens a potentially multidimensional array.
      *
      * The result array contains no nested arrays.
-     *
-     * @param array $array
-     *
-     * @return array
      */
-    private function flattenArray(array $array) : array
+    private function flattenArray(array $array): array
     {
         $result = [];
 
-        array_walk_recursive($array, function($a) use (& $result) {
+        array_walk_recursive($array, function ($a) use (&$result): void {
             $result[] = $a;
         });
 
         return $result;
     }
 
-    /**
-     * @param string      $term
-     * @param string|null $vocabulary
-     *
-     * @return string
-     */
-    private function resolveTerm(string $term, ?string $vocabulary)
+    private function resolveTerm(string $term, ?string $vocabulary): string
     {
         if ($vocabulary !== null) {
             return $vocabulary . $term;
@@ -236,7 +237,7 @@ final class JsonLdReader implements Reader
      *
      * @return Item|string|null The value, or NULL if the input value is NULL or an array.
      */
-    private function getPropertyValue(string $name, mixed $value, string $url, ?string $vocabulary) : Item|string|null
+    private function getPropertyValue(string $name, mixed $value, string $url, ?string $vocabulary): null|Item|string
     {
         if (is_string($value)) {
             if (in_array($name, $this->iriProperties, true)) {
@@ -268,11 +269,9 @@ final class JsonLdReader implements Reader
      *
      * Example: http://schema.org would return http://schema.org/
      *
-     * @param string $url
-     *
      * @return string|null An absolute URL, or null if the input is not valid.
      */
-    private function checkVocabularyUrl(string $url) : ?string
+    private function checkVocabularyUrl(string $url): ?string
     {
         try {
             $parts = parse($url);

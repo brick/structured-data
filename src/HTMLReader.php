@@ -10,8 +10,6 @@ final class HTMLReader
 
     /**
      * HTMLReader constructor.
-     *
-     * @param Reader $reader
      */
     public function __construct(Reader $reader)
     {
@@ -27,7 +25,7 @@ final class HTMLReader
      *
      * @return Item[] The top-level items.
      */
-    public function read(string $html, string $url) : array
+    public function read(string $html, string $url): array
     {
         $document = DOMBuilder::fromHTML($html);
 
@@ -43,7 +41,7 @@ final class HTMLReader
      *
      * @return Item[] The top-level items.
      */
-    public function readFile(string $file, string $url) : array
+    public function readFile(string $file, string $url): array
     {
         $document = DOMBuilder::fromHTMLFile($file);
 
