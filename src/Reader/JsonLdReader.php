@@ -6,18 +6,22 @@ namespace Brick\StructuredData\Reader;
 
 use Brick\StructuredData\Item;
 use Brick\StructuredData\Reader;
+use Dom\Document;
+use Dom\Node;
+use Dom\XPath;
 use DOMDocument;
 use DOMNode;
 use DOMXPath;
 use Override;
 use Sabre\Uri\InvalidUriException;
-use stdClass;
 
 use function array_filter;
 use function array_map;
 use function array_merge;
 use function array_values;
 use function array_walk_recursive;
+use function assert;
+use function class_exists;
 use function in_array;
 use function is_array;
 use function is_bool;
@@ -66,9 +70,14 @@ final class JsonLdReader implements Reader
     }
 
     #[Override]
-    public function read(DOMDocument $document, string $url): array
+    public function read(Document|DOMDocument $document, string $url): array
     {
-        $xpath = new DOMXPath($document);
+        if ($document instanceof Document) {
+            assert(class_exists(XPath::class));
+            $xpath = new XPath($document);
+        } else {
+            $xpath = new DOMXPath($document);
+        }
 
         $nodes = $xpath->query('//script[@type="application/ld+json"]');
         $nodes = iterator_to_array($nodes);
@@ -78,7 +87,7 @@ final class JsonLdReader implements Reader
         }
 
         $items = array_map(
-            fn (DOMNode $node) => $this->readJson($node->textContent, $url),
+            fn (DOMNode|Node $node) => $this->readJson($node->textContent, $url),
             $nodes,
         );
 
@@ -115,7 +124,7 @@ final class JsonLdReader implements Reader
 
         if (is_array($data)) {
             $items = array_map(
-                fn ($item) => is_object($item) ? $this->readItem($item, $url, null) : null,
+                fn (mixed $item) => is_object($item) ? $this->readItem($item, $url, null) : null,
                 $data,
             );
 
@@ -131,11 +140,11 @@ final class JsonLdReader implements Reader
     /**
      * Reads a single item.
      *
-     * @param stdClass    $item       A decoded JSON object representing an item, or null if invalid.
+     * @param object      $item       A decoded JSON object representing an item, or null if invalid.
      * @param string      $url        The URL the document was retrieved from, for relative URL resolution.
      * @param string|null $vocabulary The currently vocabulary URL, if any.
      */
-    private function readItem(stdClass $item, string $url, ?string $vocabulary): Item
+    private function readItem(object $item, string $url, ?string $vocabulary): Item
     {
         if (isset($item->{'@context'}) && is_string($item->{'@context'})) {
             $vocabulary = $this->checkVocabularyUrl($item->{'@context'}); // ugh
@@ -213,7 +222,7 @@ final class JsonLdReader implements Reader
     {
         $result = [];
 
-        array_walk_recursive($array, function ($a) use (&$result): void {
+        array_walk_recursive($array, function (mixed $a) use (&$result): void {
             $result[] = $a;
         });
 

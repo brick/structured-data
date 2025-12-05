@@ -59,7 +59,7 @@ class ReaderTest extends TestCase
             $jsonFile = preg_replace('/\-in\.html$/', '-out.json', $htmlFile);
             $expectedJson = rtrim(file_get_contents($jsonFile));
 
-            yield [$htmlFile, $expectedJson];
+            yield $htmlFile => [$htmlFile, $expectedJson];
         }
     }
 }

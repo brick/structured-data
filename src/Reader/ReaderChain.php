@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Brick\StructuredData\Reader;
 
 use Brick\StructuredData\Reader;
+use Dom\Document;
 use DOMDocument;
 use Override;
 
@@ -29,7 +30,7 @@ final class ReaderChain implements Reader
     }
 
     #[Override]
-    public function read(DOMDocument $document, string $url): array
+    public function read(Document|DOMDocument $document, string $url): array
     {
         if (! $this->readers) {
             return [];
