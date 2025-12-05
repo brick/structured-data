@@ -106,7 +106,7 @@ final class MicrodataReader implements Reader
 
         // Exclude properties that are inside a nested item; XPath does not seem to provide a way to do this.
         // See: https://stackoverflow.com/q/26365495/759866
-        $itemprops = array_filter($itemprops, function (DOMNode $itemprop) use ($node, $xpath) {
+        $itemprops = array_filter($itemprops, function (DOMNode $itemprop) use ($node) {
             for (; ;) {
                 $itemprop = $itemprop->parentNode;
 
