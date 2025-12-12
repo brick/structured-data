@@ -57,9 +57,9 @@ final class MicrodataReader implements Reader
     /**
      * Extracts information from a Node into an Item.
      *
-     * @param Node  $node  A Node representing an element with the itemscope attribute.
-     * @param XPath $xpath A XPath object created from the node's document element.
-     * @param string   $url   The URL the document was retrieved from, for relative URL resolution.
+     * @param Node   $node  A Node representing an element with the itemscope attribute.
+     * @param XPath  $xpath A XPath object created from the node's document element.
+     * @param string $url   The URL the document was retrieved from, for relative URL resolution.
      */
     private function nodeToItem(Node $node, XPath $xpath, string $url): Item
     {
@@ -159,9 +159,9 @@ final class MicrodataReader implements Reader
     /**
      * @see https://www.w3.org/TR/microdata/#values
      *
-     * @param Node  $node  A Node representing an element with the itemprop attribute.
-     * @param XPath $xpath A XPath object created from the node's document element.
-     * @param string   $url   The URL the document was retrieved from, for relative URL resolution.
+     * @param Node   $node  A Node representing an element with the itemprop attribute.
+     * @param XPath  $xpath A XPath object created from the node's document element.
+     * @param string $url   The URL the document was retrieved from, for relative URL resolution.
      */
     private function getPropertyValue(Node $node, XPath $xpath, string $url): Item|string
     {
