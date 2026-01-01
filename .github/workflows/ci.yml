@@ -33,6 +33,7 @@ jobs:
     name: Coding Standard
     uses: brick/coding-standard/.github/workflows/coding-standard.yml@v2
     with:
+      php-version: 8.4
       working-directory: "tools/ecs"
 
   phpunit:
@@ -43,15 +44,9 @@ jobs:
       fail-fast: false
       matrix:
         php-version:
-          - "8.1"
-          - "8.2"
-          - "8.3"
           - "8.4"
         deps:
           - "highest"
-        include:
-          - php-version: "8.1"
-            deps: "lowest"
 
     steps:
       - name: Checkout

@@ -6,9 +6,9 @@ namespace Brick\StructuredData\Reader;
 
 use Brick\StructuredData\Item;
 use Brick\StructuredData\Reader;
-use DOMDocument;
-use DOMNode;
-use DOMXPath;
+use Dom\HTMLDocument;
+use Dom\Node;
+use Dom\XPath;
 use Override;
 use Sabre\Uri\InvalidUriException;
 
@@ -36,9 +36,9 @@ use function trim;
 final class MicrodataReader implements Reader
 {
     #[Override]
-    public function read(DOMDocument $document, string $url): array
+    public function read(HTMLDocument $document, string $url): array
     {
-        $xpath = new DOMXPath($document);
+        $xpath = new XPath($document);
 
         /**
          * An item is a top-level Microdata item if its element does not have an itemprop attribute.
@@ -49,19 +49,19 @@ final class MicrodataReader implements Reader
         $nodes = iterator_to_array($nodes);
 
         return array_map(
-            fn (DOMNode $node) => $this->nodeToItem($node, $xpath, $url),
+            fn (Node $node) => $this->nodeToItem($node, $xpath, $url),
             $nodes,
         );
     }
 
     /**
-     * Extracts information from a DOMNode into an Item.
+     * Extracts information from a Node into an Item.
      *
-     * @param DOMNode  $node  A DOMNode representing an element with the itemscope attribute.
-     * @param DOMXPath $xpath A DOMXPath object created from the node's document element.
-     * @param string   $url   The URL the document was retrieved from, for relative URL resolution.
+     * @param Node   $node  A Node representing an element with the itemscope attribute.
+     * @param XPath  $xpath A XPath object created from the node's document element.
+     * @param string $url   The URL the document was retrieved from, for relative URL resolution.
      */
-    private function nodeToItem(DOMNode $node, DOMXPath $xpath, string $url): Item
+    private function nodeToItem(Node $node, XPath $xpath, string $url): Item
     {
         $itemid = $node->attributes->getNamedItem('itemid');
 
@@ -106,7 +106,7 @@ final class MicrodataReader implements Reader
 
         // Exclude properties that are inside a nested item; XPath does not seem to provide a way to do this.
         // See: https://stackoverflow.com/q/26365495/759866
-        $itemprops = array_filter($itemprops, function (DOMNode $itemprop) use ($node, $xpath) {
+        $itemprops = array_filter($itemprops, function (Node $itemprop) use ($node, $xpath) {
             for (; ;) {
                 $itemprop = $itemprop->parentNode;
 
@@ -122,7 +122,7 @@ final class MicrodataReader implements Reader
 
         $vocabularyIdentifier = $this->getVocabularyIdentifier($types);
 
-        /** @var DOMNode[] $itemprops */
+        /** @var Node[] $itemprops */
         foreach ($itemprops as $itemprop) {
             /**
              * An element introducing a property can introduce multiple properties at once, to avoid duplication when
@@ -159,11 +159,11 @@ final class MicrodataReader implements Reader
     /**
      * @see https://www.w3.org/TR/microdata/#values
      *
-     * @param DOMNode  $node  A DOMNode representing an element with the itemprop attribute.
-     * @param DOMXPath $xpath A DOMXPath object created from the node's document element.
-     * @param string   $url   The URL the document was retrieved from, for relative URL resolution.
+     * @param Node   $node  A Node representing an element with the itemprop attribute.
+     * @param XPath  $xpath A XPath object created from the node's document element.
+     * @param string $url   The URL the document was retrieved from, for relative URL resolution.
      */
-    private function getPropertyValue(DOMNode $node, DOMXPath $xpath, string $url): Item|string
+    private function getPropertyValue(Node $node, XPath $xpath, string $url): Item|string
     {
         /**
          * If the element also has an itemscope attribute: the value is the item created by the element.
