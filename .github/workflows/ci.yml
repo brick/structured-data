@@ -33,6 +33,7 @@ jobs:
     name: Coding Standard
     uses: brick/coding-standard/.github/workflows/coding-standard.yml@v2
     with:
+      php-version: 8.4
       working-directory: "tools/ecs"
 
   phpunit:
