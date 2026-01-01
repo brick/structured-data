@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Brick\StructuredData\Reader;
 
 use Brick\StructuredData\Reader;
-use DOM\HTMLDocument;
+use Dom\HTMLDocument;
 use Override;
 
 use function array_merge;

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Brick\StructuredData;
 
-use DOM\HTMLDocument;
+use Dom\HTMLDocument;
 
-use const DOM\HTML_NO_DEFAULT_NS;
+use const Dom\HTML_NO_DEFAULT_NS;
 use const LIBXML_NOERROR;
 
 final class DOMBuilder

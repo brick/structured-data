@@ -1,26 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="6.12.0@cf420941d061a57050b6c468ef2c778faf40aee2">
-  <file src="src/DOMBuilder.php">
-    <InvalidClass>
-      <code><![CDATA[HTMLDocument]]></code>
-      <code><![CDATA[HTMLDocument]]></code>
-      <code><![CDATA[HTMLDocument]]></code>
-      <code><![CDATA[HTMLDocument]]></code>
-    </InvalidClass>
-    <MixedArgument>
-      <code><![CDATA[LIBXML_NOERROR | HTML_NO_DEFAULT_NS]]></code>
-      <code><![CDATA[LIBXML_NOERROR | HTML_NO_DEFAULT_NS]]></code>
-    </MixedArgument>
-    <UndefinedConstant>
-      <code><![CDATA[HTML_NO_DEFAULT_NS]]></code>
-      <code><![CDATA[HTML_NO_DEFAULT_NS]]></code>
-    </UndefinedConstant>
-  </file>
-  <file src="src/Reader.php">
-    <InvalidClass>
-      <code><![CDATA[HTMLDocument]]></code>
-    </InvalidClass>
-  </file>
   <file src="src/Reader/JsonLdReader.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$data]]></code>
@@ -30,10 +9,6 @@
     <DocblockTypeContradiction>
       <code><![CDATA[is_string($type)]]></code>
     </DocblockTypeContradiction>
-    <InvalidClass>
-      <code><![CDATA[Node]]></code>
-      <code><![CDATA[XPath]]></code>
-    </InvalidClass>
     <MissingClosureParamType>
       <code><![CDATA[$a]]></code>
     </MissingClosureParamType>
@@ -55,16 +30,6 @@
     </RedundantConditionGivenDocblockType>
   </file>
   <file src="src/Reader/MicrodataReader.php">
-    <InvalidClass>
-      <code><![CDATA[$itemprop]]></code>
-      <code><![CDATA[Node]]></code>
-      <code><![CDATA[Node]]></code>
-      <code><![CDATA[Node]]></code>
-      <code><![CDATA[Node]]></code>
-      <code><![CDATA[XPath]]></code>
-      <code><![CDATA[XPath]]></code>
-      <code><![CDATA[XPath]]></code>
-    </InvalidClass>
     <MixedArgument>
       <code><![CDATA[$attr->textContent]]></code>
       <code><![CDATA[$attr->textContent]]></code>
@@ -116,17 +81,6 @@
     </UndefinedPropertyFetch>
   </file>
   <file src="src/Reader/RdfaLiteReader.php">
-    <InvalidClass>
-      <code><![CDATA[$property]]></code>
-      <code><![CDATA[Node]]></code>
-      <code><![CDATA[Node]]></code>
-      <code><![CDATA[Node]]></code>
-      <code><![CDATA[Node]]></code>
-      <code><![CDATA[Node]]></code>
-      <code><![CDATA[XPath]]></code>
-      <code><![CDATA[XPath]]></code>
-      <code><![CDATA[XPath]]></code>
-    </InvalidClass>
     <MixedArgument>
       <code><![CDATA[$attr->textContent]]></code>
       <code><![CDATA[$attr->textContent]]></code>

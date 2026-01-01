@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Brick\StructuredData;
 
-use DOM\HTMLDocument;
+use Dom\HTMLDocument;
 
 /**
  * Common interface for readers of each format: Microdata, RDFa Lite, JSON-LD.

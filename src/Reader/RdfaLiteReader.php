@@ -6,9 +6,9 @@ namespace Brick\StructuredData\Reader;
 
 use Brick\StructuredData\Item;
 use Brick\StructuredData\Reader;
-use DOM\HTMLDocument;
-use DOM\Node;
-use DOM\XPath;
+use Dom\HTMLDocument;
+use Dom\Node;
+use Dom\XPath;
 use Override;
 use Sabre\Uri\InvalidUriException;
 
