@@ -161,8 +161,8 @@ final class JsonLdReader implements Reader
                 $types = [$type];
             } elseif (is_array($type)) {
                 $types = array_map(
-                    fn ($type) => is_string($type) ? $this->resolveTerm($type, $vocabulary) : null,
-                    $types,
+                    fn ($t) => is_string($t) ? $this->resolveTerm($t, $vocabulary) : null,
+                    $type,
                 );
 
                 $types = array_filter($types);
