@@ -8,7 +8,7 @@ This library is a foundation to read schema.org structured data in [brick/schema
 but may be used with other vocabularies.
 
 [![Build Status](https://github.com/brick/structured-data/workflows/CI/badge.svg)](https://github.com/brick/structured-data/actions)
-<a href="https://codecov.io/github/brick/structured-data"><img src="https://codecov.io/github/brick/structured-data/graph/badge.svg"></a>
+[![Coverage Status](https://codecov.io/github/brick/structured-data/graph/badge.svg)](https://codecov.io/github/brick/structured-data)
 [![Latest Stable Version](https://poser.pugx.org/brick/structured-data/v/stable)](https://packagist.org/packages/brick/structured-data)
 [![Total Downloads](https://poser.pugx.org/brick/structured-data/downloads)](https://packagist.org/packages/brick/structured-data)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
