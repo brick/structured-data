@@ -14,13 +14,14 @@
     </MissingClosureParamType>
     <MixedArgument>
       <code><![CDATA[$name]]></code>
+      <code><![CDATA[$node->textContent]]></code>
     </MixedArgument>
     <MixedArrayAccess>
       <code><![CDATA[$name[0]]]></code>
     </MixedArrayAccess>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[fn (DOMNode $node) => $this->readJson($node->textContent, $url)]]></code>
-    </PossiblyInvalidArgument>
+    <NamedArgumentNotAllowed>
+      <code><![CDATA[$items]]></code>
+    </NamedArgumentNotAllowed>
     <RawObjectIteration>
       <code><![CDATA[$item]]></code>
     </RawObjectIteration>
@@ -29,106 +30,100 @@
     </RedundantConditionGivenDocblockType>
   </file>
   <file src="src/Reader/MicrodataReader.php">
-    <InvalidArgument>
-      <code><![CDATA[function (DOMNode $itemprop) use ($node, $xpath) {
-            for (; ;) {
-                $itemprop = $itemprop->parentNode;
-
-                if ($itemprop->isSameNode($node)) {
-                    return true;
-                }
-
-                if ($itemprop->attributes->getNamedItem('itemscope')) {
-                    return false;
-                }
-            }
-        }]]></code>
-    </InvalidArgument>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[fn (DOMNode $node) => $this->nodeToItem($node, $xpath, $url)]]></code>
-      <code><![CDATA[function (DOMNode $itemprop) use ($node, $xpath) {
-            for (; ;) {
-                $itemprop = $itemprop->parentNode;
-
-                if ($itemprop->isSameNode($node)) {
-                    return true;
-                }
-
-                if ($itemprop->attributes->getNamedItem('itemscope')) {
-                    return false;
-                }
-            }
-        }]]></code>
-    </PossiblyInvalidArgument>
-    <PossiblyNullArgument>
+    <MixedArgument>
+      <code><![CDATA[$attr->textContent]]></code>
+      <code><![CDATA[$attr->textContent]]></code>
+      <code><![CDATA[$attr->textContent]]></code>
+      <code><![CDATA[$itemid->textContent]]></code>
+      <code><![CDATA[$itemtype->textContent]]></code>
       <code><![CDATA[$names]]></code>
-      <code><![CDATA[preg_replace('/\s+/', ' ', $node->textContent)]]></code>
-    </PossiblyNullArgument>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$itemprop->attributes->getNamedItem('itemprop')->textContent]]></code>
-    </PossiblyNullPropertyFetch>
-    <PossiblyNullReference>
+      <code><![CDATA[$node->textContent]]></code>
+    </MixedArgument>
+    <MixedMethodCall>
+      <code><![CDATA[getNamedItem]]></code>
+      <code><![CDATA[getNamedItem]]></code>
+      <code><![CDATA[getNamedItem]]></code>
+      <code><![CDATA[getNamedItem]]></code>
+      <code><![CDATA[getNamedItem]]></code>
+      <code><![CDATA[getNamedItem]]></code>
+      <code><![CDATA[getNamedItem]]></code>
       <code><![CDATA[getNamedItem]]></code>
       <code><![CDATA[getNamedItem]]></code>
       <code><![CDATA[getNamedItem]]></code>
       <code><![CDATA[getNamedItem]]></code>
       <code><![CDATA[isSameNode]]></code>
-    </PossiblyNullReference>
+    </MixedMethodCall>
+    <MixedPropertyFetch>
+      <code><![CDATA[$attr->textContent]]></code>
+      <code><![CDATA[$attr->textContent]]></code>
+      <code><![CDATA[$attr->textContent]]></code>
+      <code><![CDATA[$attr->textContent]]></code>
+      <code><![CDATA[$attr->textContent]]></code>
+      <code><![CDATA[$attr->textContent]]></code>
+      <code><![CDATA[$itemid->textContent]]></code>
+      <code><![CDATA[$itemprop->attributes]]></code>
+      <code><![CDATA[$itemprop->attributes->getNamedItem('itemprop')->textContent]]></code>
+      <code><![CDATA[$itemprop->parentNode]]></code>
+      <code><![CDATA[$itemtype->textContent]]></code>
+    </MixedPropertyFetch>
+    <MixedReturnStatement>
+      <code><![CDATA[$attr->textContent]]></code>
+      <code><![CDATA[$attr->textContent]]></code>
+      <code><![CDATA[$attr->textContent]]></code>
+    </MixedReturnStatement>
+    <PossiblyInvalidArgument>
+      <code><![CDATA[preg_replace('/\s+/', ' ', $node->textContent)]]></code>
+    </PossiblyInvalidArgument>
+    <UndefinedPropertyFetch>
+      <code><![CDATA[$itemprop->attributes]]></code>
+      <code><![CDATA[$node->attributes]]></code>
+      <code><![CDATA[$node->attributes]]></code>
+    </UndefinedPropertyFetch>
   </file>
   <file src="src/Reader/RdfaLiteReader.php">
-    <InvalidArgument>
-      <code><![CDATA[function (DOMNode $itemprop) use ($node, $xpath) {
-            for (; ;) {
-                $itemprop = $itemprop->parentNode;
-
-                if ($itemprop->isSameNode($node)) {
-                    return true;
-                }
-
-                if ($itemprop->attributes->getNamedItem('typeof')) {
-                    return false;
-                }
-            }
-
-            // Unreachable, but makes static analysis happy
-            return false;
-        }]]></code>
-    </InvalidArgument>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[fn (DOMNode $node) => $this->nodeToItem($node, $xpath, $url, self::PREDEFINED_PREFIXES, null)]]></code>
-      <code><![CDATA[function (DOMNode $itemprop) use ($node, $xpath) {
-            for (; ;) {
-                $itemprop = $itemprop->parentNode;
-
-                if ($itemprop->isSameNode($node)) {
-                    return true;
-                }
-
-                if ($itemprop->attributes->getNamedItem('typeof')) {
-                    return false;
-                }
-            }
-
-            // Unreachable, but makes static analysis happy
-            return false;
-        }]]></code>
-    </PossiblyInvalidArgument>
-    <PossiblyNullArgument>
+    <MixedArgument>
+      <code><![CDATA[$attr->textContent]]></code>
+      <code><![CDATA[$attr->textContent]]></code>
       <code><![CDATA[$names]]></code>
+      <code><![CDATA[$node->textContent]]></code>
+      <code><![CDATA[$resource->textContent]]></code>
       <code><![CDATA[$typeof->textContent]]></code>
-      <code><![CDATA[preg_replace('/\s+/', ' ', $node->textContent)]]></code>
-    </PossiblyNullArgument>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$property->attributes->getNamedItem('property')->textContent]]></code>
-      <code><![CDATA[$typeof->textContent]]></code>
-    </PossiblyNullPropertyFetch>
-    <PossiblyNullReference>
+      <code><![CDATA[$vocab->textContent]]></code>
+    </MixedArgument>
+    <MixedMethodCall>
+      <code><![CDATA[getNamedItem]]></code>
+      <code><![CDATA[getNamedItem]]></code>
+      <code><![CDATA[getNamedItem]]></code>
+      <code><![CDATA[getNamedItem]]></code>
       <code><![CDATA[getNamedItem]]></code>
       <code><![CDATA[getNamedItem]]></code>
       <code><![CDATA[getNamedItem]]></code>
       <code><![CDATA[getNamedItem]]></code>
       <code><![CDATA[getNamedItem]]></code>
       <code><![CDATA[isSameNode]]></code>
-    </PossiblyNullReference>
+    </MixedMethodCall>
+    <MixedPropertyFetch>
+      <code><![CDATA[$attr->textContent]]></code>
+      <code><![CDATA[$attr->textContent]]></code>
+      <code><![CDATA[$attr->textContent]]></code>
+      <code><![CDATA[$itemprop->attributes]]></code>
+      <code><![CDATA[$itemprop->parentNode]]></code>
+      <code><![CDATA[$property->attributes->getNamedItem('property')->textContent]]></code>
+      <code><![CDATA[$resource->textContent]]></code>
+      <code><![CDATA[$typeof->textContent]]></code>
+      <code><![CDATA[$vocab->textContent]]></code>
+    </MixedPropertyFetch>
+    <MixedReturnStatement>
+      <code><![CDATA[$attr->textContent]]></code>
+    </MixedReturnStatement>
+    <PossiblyInvalidArgument>
+      <code><![CDATA[preg_replace('/\s+/', ' ', $node->textContent)]]></code>
+    </PossiblyInvalidArgument>
+    <UndefinedPropertyFetch>
+      <code><![CDATA[$node->attributes]]></code>
+      <code><![CDATA[$node->attributes]]></code>
+      <code><![CDATA[$node->attributes]]></code>
+      <code><![CDATA[$property->attributes]]></code>
+    </UndefinedPropertyFetch>
   </file>
 </files>
