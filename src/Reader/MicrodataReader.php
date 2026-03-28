@@ -41,11 +41,12 @@ final class MicrodataReader implements Reader
         $xpath = new DOMXPath($document);
 
         /**
-         * An item is a top-level Microdata item if its element does not have an itemprop attribute.
+         * An item is a top-level Microdata item if its element does not have an itemprop attribute or
+		 * if it is the mainEntity of the page.
          *
          * https://www.w3.org/TR/microdata/#associating-names-with-items
          */
-        $nodes = $xpath->query('//*[@itemscope and not(@itemprop)]');
+        $nodes = $xpath->query('//*[@itemscope and (not(@itemprop) or @itemprop="mainEntity")]');
         $nodes = iterator_to_array($nodes);
 
         return array_map(
